@@ -229,18 +229,16 @@ span{
         content: "Web Developer";
     }
     21%, 40%{
-        content: "Developer";
+        content: "Mobile Developer";
     }
     41%, 60%{
-        content: "Web Designer";
+        content: "Software Engineer";
     }
     61%, 80%{
-        content: "Youtuber";
-    }
-    81%, 100%{
-        content: "Script Writer";
+        content: "Estudiante de Ingeniería";
     }
 }
+
 
 @media (max-width: 1000px){
     .home{
