@@ -98,7 +98,6 @@ nav a.active{
 }
 
 section{
-    min-height: 100vh;
     padding: 5rem 9% 5rem;
 }
 
@@ -266,3 +265,203 @@ span{
     }
 }
 
+.services {
+    padding: 5rem 9%;
+    text-align: center;
+    background-color: black;
+}
+
+.services h2 {
+    font-size: 4rem;
+    color: #b74b4b;
+    margin-bottom: 3rem;
+}
+
+.service-items {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.service-item {
+    background-color: #161616;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px #b74b4b;
+    width: 30%;
+}
+
+.service-item h3 {
+    font-size: 2.5rem;
+    color: #b74b4b;
+    margin-bottom: 1rem;
+}
+
+.service-item p {
+    font-size: 1.6rem;
+}
+
+.skills {
+    padding: 5rem 9%;
+    text-align: center;
+    background-color: black;
+}
+
+.skills h2 {
+    font-size: 4rem;
+    color: #b74b4b;
+    margin-bottom: 3rem;
+}
+
+.skill-items {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.skill-category {
+    background-color: #161616;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px #b74b4b;
+    width: 30%;
+}
+
+.skill-category h3 {
+    font-size: 2.5rem;
+    color: #b74b4b;
+    margin-bottom: 1rem;
+}
+
+.skill-category ul {
+    list-style-type: none;
+}
+
+.skill-category li {
+    font-size: 1.6rem;
+    margin: 0.5rem 0;
+}
+
+.experience {
+    padding: 5rem 9%;
+    text-align: center;
+    background-color: black;
+}
+
+.experience h2 {
+    font-size: 4rem;
+    color: #b74b4b;
+    margin-bottom: 3rem;
+}
+
+.experience-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.experience-item {
+    background-color: #161616;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px #b74b4b;
+}
+
+.contact {
+    padding: 5rem 9%;
+    text-align: center;
+    background-color: black;
+}
+
+.contact h2 {
+    font-size: 4rem;
+    color: #b74b4b;
+    margin-bottom: 3rem;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 70%;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid #b74b4b;
+    background-color: #161616;
+    color: white;
+    font-size: 1.6rem;
+}
+
+.contact-form button {
+    padding: 1rem 3rem;
+    border-radius: 2rem;
+    background-color: #b74b4b;
+    color: black;
+    font-weight: 600;
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+/* Responsividad para Servicios */
+@media (max-width: 995px) {
+    .service-items {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .service-item {
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+
+/* Responsividad para Habilidades */
+@media (max-width: 995px) {
+    .skill-items {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .skill-category {
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+
+/* Responsividad para Experiencia */
+@media (max-width: 995px) {
+    .experience-items {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .experience-item {
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+
+/* Responsividad para Contacto */
+@media (max-width: 995px) {
+    .contact-form input,
+    .contact-form textarea {
+        width: 90%;
+    }
+}
+
+/* Ajuste de la altura del header */
+header {
+    height: 8rem; /* Establece una altura fija para el header */
+    margin-top: 0; /* Elimina el margen superior para evitar duplicación */
+}
+
+/* Espaciado para la navegación fija */
+section {
+    margin-top: 5rem;
+    padding-top: 10rem; /* Incrementa este valor para asegurar que las secciones no queden debajo del header */
+}
