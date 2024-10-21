@@ -465,3 +465,37 @@ section {
     margin-top: 5rem;
     padding-top: 10rem; /* Incrementa este valor para asegurar que las secciones no queden debajo del header */
 }
+
+.service-item {
+    background-color: #161616;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px #b74b4b;
+    width: 30%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.service-item:hover {
+    transform: scale(1.05);
+    background-color: #b74b4b;
+    color: black;
+}
+
+.service-item.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.experience-item {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.6s ease;
+}
+
+.experience-item.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
