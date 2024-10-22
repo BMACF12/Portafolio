@@ -472,30 +472,40 @@ section {
     border-radius: 1rem;
     box-shadow: 0 0 15px #b74b4b;
     width: 30%;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.5s ease;
-}
-
-.service-item:hover {
-    transform: scale(1.05);
-    background-color: #b74b4b;
-    color: black;
+    opacity: 0; /* Comienza con opacidad 0 */
+    transform: translateY(20px); /* Comienza desplazado */
+    transition: all 0.5s ease; /* Transición para la animación */
 }
 
 .service-item.show {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 1; /* Cambia la opacidad a 1 cuando tiene la clase 'show' */
+    transform: translateY(0); /* Devuelve la posición a 0 */
 }
 
 .experience-item {
-    opacity: 0;
-    transform: translateX(-50px);
-    transition: all 0.6s ease;
+    opacity: 0; /* Comienza con opacidad 0 */
+    transform: translateX(-50px); /* Comienza desplazado hacia la izquierda */
+    transition: all 0.6s ease; /* Transición para la animación */
 }
 
 .experience-item.show {
-    opacity: 1;
-    transform: translateX(0);
+    opacity: 1; /* Cambia la opacidad a 1 cuando tiene la clase 'show' */
+    transform: translateX(0); /* Devuelve la posición a 0 */
 }
 
+/* CSS para animación de skill-category */
+.skill-category {
+    background-color: #161616;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px #b74b4b;
+    width: 30%;
+    opacity: 0; /* Comienza con opacidad 0 */
+    transform: translateY(20px); /* Comienza desplazado */
+    transition: all 0.5s ease; /* Transición para la animación */
+}
+
+.skill-category.show {
+    opacity: 1; /* Cambia la opacidad a 1 cuando tiene la clase 'show' */
+    transform: translateY(0); /* Devuelve la posición a 0 */
+}

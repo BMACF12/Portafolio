@@ -1,23 +1,31 @@
-window.addEventListener('scroll', () => {
+// Función para activar las animaciones en servicios
+function animateServices() {
     const serviceItems = document.querySelectorAll('.service-item');
-    const triggerHeight = window.innerHeight / 1.2;
-
     serviceItems.forEach(item => {
-        const itemTop = item.getBoundingClientRect().top;
-        if (itemTop < triggerHeight) {
-            item.classList.add('show');
-        }
+        item.classList.add('show'); // Añade la clase 'show' a cada ítem
     });
-});
+}
 
-window.addEventListener('scroll', () => {
+// Función para activar las animaciones en experiencia
+function animateExperience() {
     const experienceItems = document.querySelectorAll('.experience-item');
-    const triggerHeight = window.innerHeight / 1.2;
-
     experienceItems.forEach(item => {
-        const itemTop = item.getBoundingClientRect().top;
-        if (itemTop < triggerHeight) {
-            item.classList.add('show');
-        }
+        item.classList.add('show'); // Añade la clase 'show' a cada ítem
     });
+}
+
+// Función para activar las animaciones en habilidades
+function animateSkills() {
+    const skillCategories = document.querySelectorAll('.skill-category');
+    skillCategories.forEach(category => {
+        category.classList.add('show'); // Añade la clase 'show' a cada ítem
+    });
+}
+
+// Ejecutar las funciones cuando la página esté completamente cargada
+window.addEventListener('load', () => {
+    console.log('Página completamente cargada, ejecutando animaciones');
+    animateServices();
+    animateExperience();
+    animateSkills(); // Añade esta línea para ejecutar la animación de habilidades
 });
