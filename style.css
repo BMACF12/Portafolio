@@ -536,12 +536,16 @@ section {
 }
 
 footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
     background-color: #161616;
     color: #b74b4b;
     padding: 2rem;
     text-align: center;
-    margin-top: 5rem;
+    z-index: 1000; /* Para asegurarse de que el footer esté por encima de otros elementos */
 }
+
 
 .footer-content {
     max-width: 1000px;
