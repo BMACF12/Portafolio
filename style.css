@@ -576,9 +576,17 @@ footer {
 }
 
 .tech-icons i {
-    font-size: 140px; /* Tamaño del ícono */
-    transition: transform 0.3s ease;
+    font-size: 140px;
+    opacity: 0; /* Comienza invisible */
+    transform: translateY(20px); /* Comienza desplazado */
+    transition: all 0.5s ease; /* Duración y transición de la animación */
 }
+
+.tech-icons i.show {
+    opacity: 1; /* Se vuelve visible */
+    transform: translateY(0); /* Vuelve a su posición original */
+}
+
 
 /* Efecto de zigzag */
 .tech-icons i:nth-child(odd) {

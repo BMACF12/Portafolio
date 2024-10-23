@@ -22,10 +22,20 @@ function animateSkills() {
     });
 }
 
+// Función para activar las animaciones en íconos de tecnologías
+function animateIcons() {
+    const techIcons = document.querySelectorAll('.tech-icons i');
+    techIcons.forEach(icon => {
+        icon.classList.add('show'); // Añade la clase 'show' a cada ícono
+    });
+}
+
 // Ejecutar las funciones cuando la página esté completamente cargada
 window.addEventListener('load', () => {
     console.log('Página completamente cargada, ejecutando animaciones');
     animateServices();
     animateExperience();
-    animateSkills(); // Añade esta línea para ejecutar la animación de habilidades
+    animateSkills();
+    animateIcons(); // Ejecuta la animación de íconos también
 });
+
