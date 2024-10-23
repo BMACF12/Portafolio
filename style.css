@@ -509,3 +509,86 @@ section {
     opacity: 1; /* Cambia la opacidad a 1 cuando tiene la clase 'show' */
     transform: translateY(0); /* Devuelve la posición a 0 */
 }
+
+/* Ajuste para que los elementos de servicio se vean mejor */
+.service-items {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en varias filas */
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.service-item {
+    background-color: #161616;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px #b74b4b;
+    width: 30%;
+    margin-bottom: 2rem; /* Añade un margen inferior para separación adicional */
+}
+
+/* Ajuste responsivo para pantallas pequeñas */
+@media (max-width: 995px) {
+    .service-item {
+        width: 80%; /* Ocupa más espacio en pantallas pequeñas */
+        margin: 0 auto;
+    }
+}
+
+footer {
+    background-color: #161616;
+    color: #b74b4b;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 5rem;
+}
+
+.footer-content {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.footer-links a {
+    color: #b74b4b;
+    margin: 0 1rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.tech-icons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.tech-icons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 12rem;
+}
+
+.tech-icons i {
+    font-size: 140px; /* Tamaño del ícono */
+    transition: transform 0.3s ease;
+}
+
+/* Efecto de zigzag */
+.tech-icons i:nth-child(odd) {
+    margin-top: 60px; /* Desplazamiento hacia abajo para los íconos impares */
+}
+
+.tech-icons i:nth-child(even) {
+    margin-top: -60px; /* Desplazamiento hacia arriba para los íconos pares */
+}
+
+.tech-icons i:hover {
+    transform: scale(1.2); /* Efecto de agrandamiento al pasar el ratón */
+}
