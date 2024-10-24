@@ -38,4 +38,3 @@ window.addEventListener('load', () => {
     animateSkills();
     animateIcons(); // Ejecuta la animación de íconos también
 });
-
