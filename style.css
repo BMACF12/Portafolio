@@ -600,7 +600,7 @@ p {
 }
 
 .tech-icons i {
-    font-size: 120px;
+    font-size: 100px;
     opacity: 0; /* Comienza invisible */
     transform: translateY(20px); /* Comienza desplazado */
     transition: all 0.5s ease; /* Duración y transición de la animación */
