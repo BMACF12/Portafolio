@@ -267,6 +267,7 @@ span{
 
 .services {
     padding: 5rem 9%;
+    padding-bottom: 10rem; /* Añade más espacio en la parte inferior */
     text-align: center;
     background-color: black;
 }
@@ -303,6 +304,7 @@ span{
 
 .skills {
     padding: 5rem 9%;
+    padding-bottom: 15rem;
     text-align: center;
     background-color: black;
 }
