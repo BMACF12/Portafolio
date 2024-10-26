@@ -717,3 +717,16 @@ p {
         height: 90%; /* Ajusta la altura del cursor */
     }
 }
+
+/* Responsividad para Habilidades */
+@media (max-width: 768px) {
+    .skill-items {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .skill-category {
+        width: 80%; /* Ajusta el ancho para pantallas pequeñas */
+        margin-bottom: 2rem; /* Añade espacio inferior entre los recuadros */
+    }
+}
