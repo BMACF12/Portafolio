@@ -730,3 +730,27 @@ p {
         margin-bottom: 2rem; /* Añade espacio inferior entre los recuadros */
     }
 }
+
+
+
+/* Ajuste de zigzag para tamaños pequeños en sentido vertical */
+@media (max-width: 768px) {
+    .tech-icons {
+        flex-direction: column; /* Cambia la dirección a columna */
+        align-items: center; /* Alinea los íconos al centro */
+        gap: 1.5rem; /* Ajusta el espacio entre íconos */
+    }
+
+    .tech-icons i {
+        font-size: 120px; /* Reduce el tamaño de los íconos */
+    }
+
+    /* Patrón de zigzag vertical */
+    .tech-icons i:nth-child(odd) {
+        transform: translateX(-70px); /* Desplaza íconos impares hacia la izquierda */
+    }
+
+    .tech-icons i:nth-child(even) {
+        transform: translateX(70px); /* Desplaza íconos pares hacia la derecha */
+    }
+}
