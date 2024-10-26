@@ -635,3 +635,22 @@ p {
 .tech-icons i:hover {
     transform: scale(1.2); /* Efecto de agrandamiento al pasar el ratón */
 }
+
+.project-link {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    color: #b74b4b;
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.project-link i {
+    margin-right: 0.5rem;
+    font-size: 1.6rem;
+}
+
+.project-link:hover {
+    color: white;
+}
