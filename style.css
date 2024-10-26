@@ -654,3 +654,66 @@ p {
 .project-link:hover {
     color: white;
 }
+
+.typing-text {
+    font-size: 3.4rem;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.typing-text span::before {
+    content: "Desarrollador de Software"; /* Texto inicial */
+    color: #b74b4b;
+    animation: words 20s infinite;
+}
+
+.typing-text span::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 100%;
+    border-left: 3px solid #b74b4b; /* Tamaño del cursor por defecto */
+    height: 100%;
+    animation: cursor 0.6s steps(1) infinite;
+    margin-left: 0.2rem;
+}
+
+/* Animación para el cambio de palabras */
+@keyframes words {
+    0%, 20% {
+        content: "Desarrollador Web";
+    }
+    21%, 40% {
+        content: "Desarrollador Móvil";
+    }
+    41%, 60% {
+        content: "Ingeniero de software";
+    }
+    61%, 80% {
+        content: "Estudiante de Ingeniería";
+    }
+}
+
+/* Parpadeo del cursor */
+@keyframes cursor {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Ajustes responsivos para el cursor en pantallas pequeñas */
+@media (max-width: 768px) {
+    .typing-text {
+        font-size: 2.5rem; /* Reduce el tamaño del texto en general */
+    }
+    .typing-text span::after {
+        border-left: 2px solid #b74b4b; /* Reduce el ancho del cursor en pantallas pequeñas */
+        height: 90%; /* Ajusta la altura del cursor */
+    }
+}
