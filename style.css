@@ -754,44 +754,58 @@ p {
         transform: translateX(70px); /* Desplaza íconos pares hacia la derecha */
     }
 }
-
-/* Ocultar el menú hamburguesa en pantallas grandes */
+/* Estilo del botón de menú hamburguesa */
 .menu-toggle {
     display: none;
 }
 
-/* Mostrar el menú hamburguesa y ajustar la barra de navegación en pantallas pequeñas */
 @media (max-width: 995px) {
     .menu-toggle {
         display: block;
         font-size: 2.5rem;
         color: #b74b4b;
         cursor: pointer;
-        z-index: 110; /* Para que esté sobre el resto de los elementos */
+        z-index: 110;
     }
 
-    /* Ajustes para la barra de navegación */
+    /* Estilos para el menú desplegable */
     nav {
-        position: absolute;
+        position: fixed;
         top: 0;
-        right: -100%; /* Oculta el menú fuera de la pantalla */
+        left: 0;
         width: 100%;
         height: 100vh;
-        background-color: #161616;
+        background: rgba(22, 22, 22, 0.95); /* Fondo semi-transparente */
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: right 0.3s ease;
+        transform: translateY(-100%);
+        transition: transform 0.4s ease;
         z-index: 100;
     }
 
+    /* Menú activo */
     nav.active {
-        right: 0; /* Muestra el menú al presionar el botón */
+        transform: translateY(0);
     }
 
+    /* Enlaces del menú desplegable */
     nav a {
         font-size: 2rem;
-        margin: 1.5rem 0;
+        color: #b74b4b;
+        padding: 1rem 0;
+        width: 100%;
+        text-align: center;
+        transition: color 0.3s ease, background 0.3s ease;
+        background: #161616;
+        margin: 0.5rem 0;
+        border-radius: 5px;
+    }
+
+    /* Efecto hover para los enlaces del menú */
+    nav a:hover {
+        color: white;
+        background-color: #b74b4b;
     }
 }
