@@ -1,3 +1,9 @@
+// Función para mostrar/ocultar el menú de navegación en dispositivos móviles
+document.getElementById('menu-toggle').addEventListener('click', function () {
+    const nav = document.querySelector('nav');
+    nav.classList.toggle('active');
+});
+
 // Función para activar las animaciones en servicios
 function animateServices() {
     const serviceItems = document.querySelectorAll('.service-item');

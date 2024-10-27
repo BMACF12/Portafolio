@@ -754,3 +754,44 @@ p {
         transform: translateX(70px); /* Desplaza íconos pares hacia la derecha */
     }
 }
+
+/* Ocultar el menú hamburguesa en pantallas grandes */
+.menu-toggle {
+    display: none;
+}
+
+/* Mostrar el menú hamburguesa y ajustar la barra de navegación en pantallas pequeñas */
+@media (max-width: 995px) {
+    .menu-toggle {
+        display: block;
+        font-size: 2.5rem;
+        color: #b74b4b;
+        cursor: pointer;
+        z-index: 110; /* Para que esté sobre el resto de los elementos */
+    }
+
+    /* Ajustes para la barra de navegación */
+    nav {
+        position: absolute;
+        top: 0;
+        right: -100%; /* Oculta el menú fuera de la pantalla */
+        width: 100%;
+        height: 100vh;
+        background-color: #161616;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: right 0.3s ease;
+        z-index: 100;
+    }
+
+    nav.active {
+        right: 0; /* Muestra el menú al presionar el botón */
+    }
+
+    nav a {
+        font-size: 2rem;
+        margin: 1.5rem 0;
+    }
+}
