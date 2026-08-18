@@ -1,13 +1,12 @@
 /**
  * Generative particle / flow-field background.
  *
- * Renders a constellation-like flowing field of particles across the entire
- * page. Reacts to scroll velocity (Lenis) and pointer position. Colours are
- * read from CSS variables so light/dark theme toggles work automatically.
+ * Trails fade to TRANSPARENT (not to opaque page colour) so the canvas never
+ * darkens the page when mix-blend-mode: multiply is active in light theme.
  */
 
 import { prefersReducedMotion, isTouchDevice } from '../utils/helpers';
-import { getStoredTheme, getCurrentTheme } from './theme.client';
+import { getCurrentTheme } from './theme.client';
 
 interface Particle {
   x: number;
@@ -23,14 +22,20 @@ const LINK_DISTANCE = 140;
 const LINK_DISTANCE_MOBILE = 90;
 const CURSOR_RADIUS = 180;
 const CURSOR_FORCE = 0.35;
+const TRAIL_FADE = 0.092; // alpha kept per frame via destination-in (1 - 0.092 = 0.908 decay)
 
-let bound = false;
-let ctx: CanvasRenderingContext2D | null = null;
 let canvas: HTMLCanvasElement | null = null;
+let ctx: CanvasRenderingContext2D | null = null;
 let rafId = 0;
 let scrollVel = 0;
 let theme: 'dark' | 'light' = 'dark';
 let accent = { r: 230, g: 57, b: 70 };
+let width = 0;
+let height = 0;
+let particles: Particle[] = [];
+let linkDistance = LINK_DISTANCE;
+let isMobile = false;
+let dpr = 1;
 
 function parseColor(value: string) {
   const trimmed = value.trim();
@@ -54,252 +59,256 @@ function parseColor(value: string) {
 }
 
 function refreshThemeColors() {
-  const root = getComputedStyle(document.documentElement);
   theme = getCurrentTheme();
+  const root = getComputedStyle(document.documentElement);
   accent = parseColor(root.getPropertyValue('--color-accent') || '#e63946');
 }
 
+function alphaForTheme(baseAlpha: number) {
+  // Boost contrast on light backgrounds so particles are clearly visible.
+  return theme === 'light' ? Math.min(1, baseAlpha * 1.7) : baseAlpha;
+}
+
+function spawn(): Particle {
+  return {
+    x: Math.random() * width,
+    y: Math.random() * height,
+    vx: (Math.random() - 0.5) * 0.25,
+    vy: (Math.random() - 0.5) * 0.25,
+    r: Math.random() * 1.4 + 0.4,
+  };
+}
+
+function resize() {
+  if (!canvas || !ctx) return;
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  width = window.innerWidth;
+  height = window.innerHeight;
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  isMobile = window.matchMedia('(max-width: 700px)').matches;
+  const area = width * height;
+  const target = isMobile ? PARTICLE_BASE_MOBILE : PARTICLE_BASE_DESKTOP;
+  const density = area / (1440 * 900);
+  const count = Math.round(target * Math.max(0.5, Math.min(1.4, density)));
+  linkDistance = isMobile ? LINK_DISTANCE_MOBILE : LINK_DISTANCE;
+
+  if (particles.length !== count) {
+    particles = Array.from({ length: count }, spawn);
+  }
+}
+
+let mouseX = -9999;
+let mouseY = -9999;
+
+function onPointerMove(event: PointerEvent) {
+  mouseX = event.clientX;
+  mouseY = event.clientY;
+}
+
+function onPointerLeave() {
+  mouseX = -9999;
+  mouseY = -9999;
+}
+
+let lastScrollY = window.scrollY;
+let lastScrollTime = performance.now();
+
+function onWheel() {
+  const now = performance.now();
+  const dy = window.scrollY - lastScrollY;
+  const dt = Math.max(16, now - lastScrollTime);
+  scrollVel = dy / dt;
+  lastScrollY = window.scrollY;
+  lastScrollTime = now;
+}
+
+function attachLenis() {
+  const lenis = window.__lenis;
+  if (lenis && typeof lenis.on === 'function') {
+    lenis.on('scroll', ({ scroll, velocity }: { scroll: number; velocity: number }) => {
+      scrollVel = velocity * 1.2;
+      lastScrollY = scroll;
+    });
+  } else {
+    setTimeout(attachLenis, 200);
+  }
+}
+
+function step() {
+  if (!ctx || !canvas) return;
+  rafId = requestAnimationFrame(step);
+
+  // 1) Fade existing pixels toward transparent (destination-in keeps alpha).
+  ctx.globalCompositeOperation = 'destination-in';
+  ctx.fillStyle = `rgba(0, 0, 0, ${1 - TRAIL_FADE})`;
+  ctx.fillRect(0, 0, width, height);
+
+  // 2) Draw particles + links with additive blending.
+  ctx.globalCompositeOperation = 'lighter';
+
+  const flow = Math.min(Math.abs(scrollVel) * 0.6, 2.5);
+  const flowSign = Math.sign(scrollVel) || 0;
+
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    const angle =
+      Math.sin(p.y * 0.0025 + performance.now() * 0.0001) * 1.6 +
+      Math.cos(p.x * 0.003) * 1.6 +
+      flowSign * flow * 0.4;
+    p.vx += Math.cos(angle) * 0.018;
+    p.vy += Math.sin(angle) * 0.018;
+
+    const dx = p.x - mouseX;
+    const dy = p.y - mouseY;
+    const distSq = dx * dx + dy * dy;
+    if (distSq < CURSOR_RADIUS * CURSOR_RADIUS && distSq > 1) {
+      const dist = Math.sqrt(distSq);
+      const force = (1 - dist / CURSOR_RADIUS) * CURSOR_FORCE;
+      p.vx += (dx / dist) * force;
+      p.vy += (dy / dist) * force;
+    }
+
+    p.vx *= 0.94;
+    p.vy *= 0.94;
+    p.vx += (Math.random() - 0.5) * 0.05;
+    p.vy += (Math.random() - 0.5) * 0.05;
+
+    p.x += p.vx;
+    p.y += p.vy;
+
+    if (p.x < -20) p.x = width + 20;
+    if (p.x > width + 20) p.x = -20;
+    if (p.y < -20) p.y = height + 20;
+    if (p.y > height + 20) p.y = -20;
+  }
+
+  const linkAlpha = alphaForTheme(0.35);
+  for (let i = 0; i < particles.length; i++) {
+    const a = particles[i];
+    for (let j = i + 1; j < particles.length; j++) {
+      const b = particles[j];
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < linkDistance) {
+        const alpha = (1 - d / linkDistance) * linkAlpha;
+        ctx.strokeStyle = `rgba(${accent.r}, ${accent.g}, ${accent.b}, ${alpha})`;
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  const particleAlpha = alphaForTheme(0.8);
+  ctx.fillStyle = `rgba(${accent.r}, ${accent.g}, ${accent.b}, ${particleAlpha})`;
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  scrollVel *= 0.9;
+}
+
+function start() {
+  if (!ctx || !canvas) return;
+  refreshThemeColors();
+  resize();
+  if (!rafId) rafId = requestAnimationFrame(step);
+}
+
+function pause() {
+  if (rafId) {
+    cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
+}
+
+function onVisibilityChange() {
+  if (document.hidden) {
+    pause();
+  } else if (!rafId && canvas && ctx) {
+    rafId = requestAnimationFrame(step);
+  }
+}
+
+function onThemeChange() {
+  refreshThemeColors();
+  if (!ctx || !canvas) return;
+  ctx.clearRect(0, 0, width, height);
+}
+
 export function initGenerativeBackground() {
-  if (bound) return;
-  bound = true;
-
-  canvas = document.querySelector<HTMLCanvasElement>('[data-generative-bg]');
-  if (!canvas) {
-    bound = false;
-    return;
-  }
-
+  const newCanvas = document.querySelector<HTMLCanvasElement>('[data-generative-bg]');
+  if (!newCanvas) return;
   if (prefersReducedMotion() || isTouchDevice()) {
-    canvas.style.display = 'none';
-    bound = false;
+    newCanvas.style.display = 'none';
     return;
   }
 
-  ctx = canvas.getContext('2d');
-  if (!ctx) {
-    bound = false;
+  // Already initialised on THIS canvas → no-op.
+  if (canvas === newCanvas && ctx) {
+    refreshThemeColors();
     return;
   }
+
+  // If we are switching to a fresh canvas (after ClientRouter navigation),
+  // recycle the existing RAF loop and just rebind the new context.
+  if (rafId) {
+    cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
+
+  canvas = newCanvas;
+  ctx = canvas.getContext('2d');
+  if (!ctx) return;
 
   refreshThemeColors();
+  resize();
 
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  let width = 0;
-  let height = 0;
-
-  const isMobile = window.matchMedia('(max-width: 700px)').matches;
-  let particleCount = isMobile ? PARTICLE_BASE_MOBILE : PARTICLE_BASE_DESKTOP;
-  let linkDistance = isMobile ? LINK_DISTANCE_MOBILE : LINK_DISTANCE;
-
-  const particles: Particle[] = [];
-
-  function resize() {
-    if (!canvas || !ctx) return;
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const area = width * height;
-    const target = isMobile ? PARTICLE_BASE_MOBILE : PARTICLE_BASE_DESKTOP;
-    const density = area / (1440 * 900);
-    particleCount = Math.round(target * Math.max(0.5, Math.min(1.4, density)));
-    linkDistance = isMobile ? LINK_DISTANCE_MOBILE : LINK_DISTANCE;
-
-    particles.length = 0;
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(spawn());
-    }
-  }
-
-  function spawn(): Particle {
-    return {
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: (Math.random() - 0.5) * 0.25,
-      r: Math.random() * 1.4 + 0.4,
-    };
-  }
-
-  let mouseX = -9999;
-  let mouseY = -9999;
-
-  function onPointerMove(event: PointerEvent) {
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-  }
-
-  function onPointerLeave() {
-    mouseX = -9999;
-    mouseY = -9999;
-  }
-
-  // Smooth scroll velocity captured from wheel + Lenis scroll events.
-  let lastScrollY = window.scrollY;
-  let lastScrollTime = performance.now();
-
-  function onWheel() {
-    const now = performance.now();
-    const dy = window.scrollY - lastScrollY;
-    const dt = Math.max(16, now - lastScrollTime);
-    scrollVel = dy / dt; // px / ms
-    lastScrollY = window.scrollY;
-    lastScrollTime = now;
-  }
-
+  window.removeEventListener('resize', resize);
+  window.addEventListener('resize', resize, { passive: true });
+  window.removeEventListener('pointermove', onPointerMove);
+  window.addEventListener('pointermove', onPointerMove, { passive: true });
+  window.removeEventListener('pointerleave', onPointerLeave);
+  window.addEventListener('pointerleave', onPointerLeave);
+  document.removeEventListener('mouseleave', onPointerLeave);
+  document.addEventListener('mouseleave', onPointerLeave);
+  window.removeEventListener('wheel', onWheel);
   window.addEventListener('wheel', onWheel, { passive: true });
 
-  // Listen to Lenis scroll if available (smoother velocity capture).
-  function attachLenis() {
-    const lenis = window.__lenis;
-    if (lenis && typeof lenis.on === 'function') {
-      lenis.on('scroll', ({ scroll, velocity }: { scroll: number; velocity: number }) => {
-        scrollVel = velocity * 1.2; // velocity is px/frame-ish
-        lastScrollY = scroll;
-      });
-    } else {
-      setTimeout(attachLenis, 200);
-    }
+  if (!themeObserver) {
+    themeObserver = new MutationObserver(() => {
+      if (getCurrentTheme() !== theme) onThemeChange();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class', 'data-theme'],
+    });
   }
+
+  document.removeEventListener('visibilitychange', onVisibilityChange);
+  document.addEventListener('visibilitychange', onVisibilityChange);
+
   attachLenis();
-
-  function step() {
-    if (!ctx) return;
-    rafId = requestAnimationFrame(step);
-
-    // Background trail: leave a semi-transparent fill rather than clearing fully.
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = theme === 'light'
-      ? 'rgba(250, 250, 250, 0.22)'
-      : 'rgba(10, 10, 10, 0.22)';
-    ctx.fillRect(0, 0, width, height);
-
-    ctx.globalCompositeOperation = 'lighter';
-
-    // Slight scroll-velocity nudge.
-    const flow = Math.min(Math.abs(scrollVel) * 0.6, 2.5);
-    const flowSign = Math.sign(scrollVel) || 0;
-
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-
-      // Flow-field from a slow sinusoid based on position.
-      const angle =
-        Math.sin(p.y * 0.0025 + performance.now() * 0.0001) * 1.6 +
-        Math.cos(p.x * 0.003) * 1.6 +
-        flowSign * flow * 0.4;
-      p.vx += Math.cos(angle) * 0.018;
-      p.vy += Math.sin(angle) * 0.018;
-
-      // Cursor interaction.
-      const dx = p.x - mouseX;
-      const dy = p.y - mouseY;
-      const distSq = dx * dx + dy * dy;
-      if (distSq < CURSOR_RADIUS * CURSOR_RADIUS && distSq > 1) {
-        const dist = Math.sqrt(distSq);
-        const force = (1 - dist / CURSOR_RADIUS) * CURSOR_FORCE;
-        p.vx += (dx / dist) * force;
-        p.vy += (dy / dist) * force;
-      }
-
-      // Damp velocity.
-      p.vx *= 0.94;
-      p.vy *= 0.94;
-      p.vx += (Math.random() - 0.5) * 0.05;
-      p.vy += (Math.random() - 0.5) * 0.05;
-
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < -20) p.x = width + 20;
-      if (p.x > width + 20) p.x = -20;
-      if (p.y < -20) p.y = height + 20;
-      if (p.y > height + 20) p.y = -20;
-    }
-
-    // Draw links.
-    for (let i = 0; i < particles.length; i++) {
-      const a = particles[i];
-      for (let j = i + 1; j < particles.length; j++) {
-        const b = particles[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < linkDistance) {
-          const alpha = (1 - d / linkDistance) * 0.35;
-          ctx.strokeStyle = `rgba(${accent.r}, ${accent.g}, ${accent.b}, ${alpha})`;
-          ctx.lineWidth = 0.6;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
-      }
-    }
-
-    // Draw particles.
-    ctx.fillStyle = `rgba(${accent.r}, ${accent.g}, ${accent.b}, 0.8)`;
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Decay scroll velocity.
-    scrollVel *= 0.9;
-  }
-
-  function start() {
-    refreshThemeColors();
-    resize();
-    rafId = requestAnimationFrame(step);
-  }
-
-  function pause() {
-    if (rafId) {
-      cancelAnimationFrame(rafId);
-      rafId = 0;
-    }
-  }
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      pause();
-    } else if (!rafId) {
-      rafId = requestAnimationFrame(step);
-    }
-  });
-
-  // Refresh colours when the theme toggles.
-  const observer = new MutationObserver(() => {
-    if (getCurrentTheme() !== theme) {
-      refreshThemeColors();
-    }
-  });
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class', 'data-theme'],
-  });
-
-  window.addEventListener('resize', resize, { passive: true });
-  window.addEventListener('pointermove', onPointerMove, { passive: true });
-  window.addEventListener('pointerleave', onPointerLeave);
-  document.addEventListener('mouseleave', onPointerLeave);
-
-  void getStoredTheme; // imported for side-effect (window.toggleTheme) only
-
   start();
 }
+
+let themeObserver: MutationObserver | null = null;
 
 export function destroyGenerativeBackground() {
   if (rafId) cancelAnimationFrame(rafId);
   rafId = 0;
-  bound = false;
-  ctx = null;
   canvas = null;
+  ctx = null;
+  particles = [];
 }

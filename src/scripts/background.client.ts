@@ -24,15 +24,11 @@ const ACCENT_DEFAULTS: Record<string, string> = {
   contact: 'rgba(230, 57, 70, 0.16)',
 };
 
-let bound = false;
-
 export function initBackgroundMotion() {
   const atmosphere = document.querySelector<HTMLElement>('.global-atmosphere');
   const grid = document.querySelector<HTMLElement>('.global-grid');
   const aurora = document.querySelector<HTMLElement>('.global-aurora');
   if (!atmosphere || !grid || !aurora) return;
-  if (bound) return;
-  bound = true;
 
   const reduced = prefersReducedMotion();
   const root = document.documentElement;

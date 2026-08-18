@@ -87,7 +87,7 @@ const edges = [[0,1],[0,3],[1,2],[1,4],[2,5],[3,4],[4,5],[3,7],[4,7],[5,8],[5,9]
 </div>
 
 <style>
-  .constellation { position: relative; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid var(--color-border); border-radius: var(--radius-2xl); background: color-mix(in srgb, var(--color-bg-secondary) 82%, transparent); overflow: hidden; }
+  .constellation { position: relative; z-index: 1; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid var(--color-border); border-radius: var(--radius-2xl); background: color-mix(in srgb, var(--color-bg-secondary) 92%, transparent); overflow: hidden; }
   .constellation::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--color-accent-glow), transparent 52%); opacity: .18; pointer-events: none; }
   .constellation-topline, .constellation-legend { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
   .constellation-status, .constellation-hint, .constellation-legend span { font: 1.1rem var(--font-mono); text-transform: uppercase; letter-spacing: .16em; color: var(--color-text-muted); }
@@ -101,6 +101,8 @@ const edges = [[0,1],[0,3],[1,2],[1,4],[2,5],[3,4],[4,5],[3,7],[4,7],[5,8],[5,9]
   .skill-node:active { cursor: grabbing; }
   .skill-node.is-dragging { filter: url(#node-glow) drop-shadow(0 0 18px var(--color-accent)); }
   .constellation-edges.is-dragging line { opacity: 0.9; }
+  :global(html.light) .skill-node .node-circle { stroke-width: 2; }
+  :global(html.light) .skill-node .node-label { paint-order: stroke fill; stroke: color-mix(in srgb, var(--color-bg-secondary) 70%, transparent); stroke-width: 3; }
   .skill-node .node-pulse { fill: var(--color-accent); opacity: 0; }
   .skill-node .node-circle { fill: var(--color-bg-tertiary); stroke: var(--color-accent); stroke-width: 1.5; }
   .skill-node .node-core { fill: var(--color-accent); }

@@ -11,6 +11,10 @@
     opacity: var(--gen-bg-opacity, 0.9);
     mix-blend-mode: screen;
   }
+  :global(html.light) .generative-bg {
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+  }
   @media (prefers-reduced-motion: reduce) {
     .generative-bg { display: none; }
   }

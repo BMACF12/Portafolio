@@ -35,13 +35,15 @@ function initPage() {
   initCursorSystem();
   initSectionEffects();
   initSpotlights();
-  initBackgroundMotion();
-  initGenerativeBackground();
   initLetterboxTransitions();
   initCodeEditor();
 
+  // Kill stale ScrollTriggers BEFORE rebuilding anything, so the background
+  // tweens we create below survive the next ClientRouter navigation.
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill(true));
 
+  initBackgroundMotion();
+  initGenerativeBackground();
   initGsapAnimations();
   initConstellation();
   initTypingEffect();
