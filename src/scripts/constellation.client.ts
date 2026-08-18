@@ -289,12 +289,17 @@ export function initConstellation() {
   if (!newRoot) return;
 
   // If this is a fresh root after ClientRouter navigation, the old ticker
-  // would otherwise keep running against detached nodes. Cancel it.
-  if (root !== newRoot && tickerId !== null) {
-    cancelAnimationFrame(tickerId);
-    tickerId = null;
+  // would otherwise keep running against detached nodes. Cancel it and
+  // reset module-level flags so reveal() runs against the new DOM.
+  if (root !== newRoot) {
+    if (tickerId !== null) {
+      cancelAnimationFrame(tickerId);
+      tickerId = null;
+    }
     nodes = [];
     edges = [];
+    revealed = false;
+    activeIndex = -1;
   }
 
   if (newRoot.dataset.ready === 'true') return;
