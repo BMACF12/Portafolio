@@ -1,0 +1,181 @@
+{
+  "meta": {
+    "title": "Brian Flores | Desarrollador Full-Stack",
+    "description": "Desarrollador de Software especializado en Angular, TypeScript y Flutter. Construyo experiencias digitales modernas, rápidas y accesibles.",
+    "ogDescription": "Portafolio de Brian Flores — Desarrollador Full-Stack en Ecuador, especializado en Angular y Flutter.",
+    "keywords": ["desarrollador", "full-stack", "angular", "typescript", "flutter", "ecuador", "portafolio"],
+    "author": "Brian Flores",
+    "locale": "es-ES"
+  },
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "skills": "Habilidades",
+    "projects": "Proyectos",
+    "experience": "Experiencia",
+    "contact": "Contacto",
+    "cv": "Descargar CV",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "skipToContent": "Saltar al contenido principal"
+  },
+  "hero": {
+    "greeting": "Hola, soy",
+    "name": "Brian Flores",
+    "tagline": "Ingeniero de Software",
+    "rotatingTexts": [
+      "Desarrollador Full-Stack",
+      "Angular & TypeScript",
+      "Flutter & Dart",
+      "Apasionado por el código"
+    ],
+    "description": "Construyo productos digitales que la gente ama. Especializado en experiencias web y móviles con un enfoque obsesivo en el detalle.",
+    "cta": {
+      "primary": "Ver mi trabajo",
+      "secondary": "Hablemos"
+    },
+    "scrollIndicator": "Desliza para descubrir"
+  },
+  "intro": {
+    "label": "Sobre mí",
+    "title": "Diseño y construyo",
+    "titleAccent": "experiencias digitales",
+    "paragraphs": [
+      "Soy Ingeniero en Software en formación en la Universidad de las Fuerzas Armadas ESPE, con sede en Ecuador. Combino una base académica sólida con experiencia práctica construyendo aplicaciones reales.",
+      "Mi enfoque está en el frontend moderno: arquitecturas escalables en Angular, interfaces accesibles y experiencias móviles fluidas con Flutter. Cada proyecto es una oportunidad para aprender algo nuevo.",
+      "Cuando no escribo código, me encontrarás leyendo sobre arquitectura de software, contribuyendo a proyectos open source o experimentando con nuevas tecnologías."
+    ]
+  },
+  "services": {
+    "label": "Servicios",
+    "title": "Lo que hago",
+    "items": [
+      {
+        "title": "Desarrollo Web",
+        "description": "Aplicaciones SPA y SSR con Angular, TypeScript y las últimas prácticas del ecosistema frontend."
+      },
+      {
+        "title": "Desarrollo Móvil",
+        "description": "Apps multiplataforma con Flutter y Dart, con foco en rendimiento y experiencia nativa."
+      },
+      {
+        "title": "APIs y Backend",
+        "description": "Integración con servicios RESTful, autenticación JWT y arquitecturas serverless modernas."
+      },
+      {
+        "title": "UI/UX Engineering",
+        "description": "Interfaces intuitivas, accesibles y responsivas con Tailwind, animaciones fluidas con GSAP."
+      },
+      {
+        "title": "Optimización Web",
+        "description": "Sitios web rápidos como un rayo: técnicas de performance, SEO técnico y Core Web Vitals."
+      },
+      {
+        "title": "Consultoría Técnica",
+        "description": "Code review, arquitectura de proyectos y mentoría para equipos junior."
+      }
+    ]
+  },
+  "skills": {
+    "label": "Stack",
+    "title": "Mi caja de herramientas",
+    "categories": [
+      {
+        "name": "Frontend",
+        "skills": [
+          { "name": "Angular", "level": 90 },
+          { "name": "TypeScript", "level": 88 },
+          { "name": "JavaScript", "level": 92 },
+          { "name": "HTML & CSS", "level": 95 },
+          { "name": "Tailwind CSS", "level": 90 },
+          { "name": "RxJS", "level": 80 }
+        ]
+      },
+      {
+        "name": "Mobile",
+        "skills": [
+          { "name": "Flutter", "level": 85 },
+          { "name": "Dart", "level": 82 },
+          { "name": "Firebase", "level": 78 },
+          { "name": "REST APIs", "level": 88 },
+          { "name": "Push Notifications", "level": 75 },
+          { "name": "State Management", "level": 80 }
+        ]
+      },
+      {
+        "name": "Tools & More",
+        "skills": [
+          { "name": "Git & GitHub", "level": 90 },
+          { "name": "Scrum / Kanban", "level": 85 },
+          { "name": "Figma", "level": 75 },
+          { "name": "Vite / Webpack", "level": 80 },
+          { "name": "Vercel / Netlify", "level": 85 },
+          { "name": "Problem Solving", "level": 92 }
+        ]
+      }
+    ]
+  },
+  "projects": {
+    "label": "Proyectos",
+    "title": "Cosas que he construido",
+    "subtitle": "Una selección de proyectos donde apliqué pensamiento crítico y código limpio.",
+    "viewProject": "Ver proyecto",
+    "viewCode": "Ver código",
+    "liveDemo": "Demo en vivo",
+    "stack": "Stack",
+    "highlights": "Highlights",
+    "coming": "Pronto",
+    "allProjects": "Todos los proyectos",
+    "backToProjects": "Volver a proyectos",
+    "otherProjects": "Otros proyectos",
+    "year": "Año",
+    "statusLabel": "Estado",
+    "statusLabels": {
+      "completed": "Completado",
+      "in-progress": "En desarrollo",
+      "archived": "Archivado"
+    }
+  },
+  "philosophy": {
+    "label": "Filosofía",
+    "quote": "El código es poesía. Cada función es un verso, cada módulo una estrofa, y el producto final es la obra que el usuario experimenta.",
+    "author": "Brian Flores"
+  },
+  "contact": {
+    "label": "Contacto",
+    "title": "¿Construimos algo juntos?",
+    "subtitle": "Estoy disponible para oportunidades laborales, proyectos freelance y colaboraciones.",
+    "name": "Nombre",
+    "email": "Email",
+    "subject": "Asunto",
+    "message": "Mensaje",
+    "send": "Enviar mensaje",
+    "sending": "Enviando...",
+    "success": "¡Gracias! Te responderé pronto.",
+    "error": "Hubo un error. Por favor intenta de nuevo.",
+    "validation": {
+      "nameRequired": "El nombre es obligatorio",
+      "emailRequired": "El email es obligatorio",
+      "emailInvalid": "Email inválido",
+      "messageRequired": "El mensaje es obligatorio",
+      "messageMin": "El mensaje debe tener al menos 10 caracteres"
+    },
+    "info": {
+      "email": "Email",
+      "location": "Ubicación",
+      "locationValue": "Ecuador · Disponible remoto",
+      "availability": "Disponibilidad"
+    }
+  },
+  "footer": {
+    "tagline": "Construido con código limpio y mucho café ☕",
+    "rights": "Todos los derechos reservados.",
+    "builtWith": "Construido con"
+  },
+  "social": {
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "instagram": "Instagram",
+    "email": "Email"
+  }
+}

@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SectionLabel from '../../../components/ui/SectionLabel.astro';
+import { useTranslations } from '../../../utils/i18n';
+
+export const prerender = true;
+
+const t = useTranslations('en');
+const projects = (await getCollection('projects', ({ data }) => data.lang === 'en'))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout locale="en" title={t.projects.title} description={t.projects.subtitle}>
+  <section class="projects-page" data-section="projects">
+    <div class="container">
+      <div class="page-header">
+        <SectionLabel label={t.projects.label} number="P" />
+        <h1 class="page-title font-display reveal">{t.projects.title}</h1>
+        <p class="page-subtitle reveal">{t.projects.subtitle}</p>
+      </div>
+
+      <div class="projects-grid reveal-stagger">
+        {projects.map((project, idx) => (
+          <a href={`/en/projects/${project.id.split('/')[1]}`} class="project-card" data-spotlight data-cursor-view>
+            <div class="card-visual">
+              <span class="card-number">{String(idx + 1).padStart(2, '0')}</span>
+              <span class="card-year">{project.data.year}</span>
+            </div>
+            <div class="card-body">
+              <span class:list={['card-status', `status-${project.data.status}`]}>
+                {t.projects.statusLabels[project.data.status]}
+              </span>
+              <h2 class="card-title font-display">{project.data.title}</h2>
+              <p class="card-desc">{project.data.description}</p>
+              <div class="card-tags">
+                {project.data.tags.map((tag) => <span class="card-tag">{tag}</span>)}
+              </div>
+              <span class="card-link">{t.projects.viewProject} →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .projects-page { min-height: 100vh; padding: calc(var(--header-height) + var(--space-8)) 0 var(--space-12); }
+  .page-header { text-align: center; margin-bottom: var(--space-8); }
+  .page-title { font-size: var(--text-display-2); font-weight: 700; letter-spacing: -.04em; }
+  .page-subtitle { font-size: var(--text-body-lg); color: var(--color-text-secondary); max-width: 55ch; margin: 1.5rem auto 0; }
+  .projects-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
+  @media (min-width: 768px) { .projects-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1200px) { .projects-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .project-card {
+    display: flex; flex-direction: column;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: transform var(--transition-slow), border-color var(--transition-base), box-shadow var(--transition-slow);
+  }
+  .project-card:hover { transform: translateY(-6px); border-color: var(--color-accent); box-shadow: var(--shadow-md); }
+  .card-visual {
+    position: relative; aspect-ratio: 16/9;
+    background: linear-gradient(135deg, rgba(230,57,70,.12), transparent 60%), var(--color-bg-tertiary);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-number { font-family: var(--font-display); font-size: 9rem; font-weight: 700; color: var(--color-accent); opacity: .25; line-height: 1; }
+  .card-year { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--font-mono); font-size: 1.2rem; color: var(--color-text-muted); }
+  .card-body { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); flex-grow: 1; }
+  .card-status { font-family: var(--font-mono); font-size: 1.1rem; text-transform: uppercase; letter-spacing: .2em; color: #4ade80; }
+  .card-status.status-in-progress { color: #f59e0b; }
+  .card-status.status-archived { color: var(--color-text-muted); }
+  .card-title { font-size: var(--text-h3); font-weight: 700; letter-spacing: -.02em; }
+  .card-desc { font-size: 1.4rem; color: var(--color-text-secondary); line-height: 1.6; flex-grow: 1; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .card-tag { padding: .4rem .9rem; background: var(--color-bg-tertiary); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 1.1rem; color: var(--color-text-secondary); }
+  .card-link { color: var(--color-accent); font-weight: 600; font-size: 1.3rem; }
+</style>

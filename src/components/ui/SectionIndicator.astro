@@ -1,0 +1,25 @@
+<aside class="section-indicator" data-section-indicator aria-label="Section navigation">
+  <span class="section-indicator-line"></span>
+  <div class="section-dots">
+    <a href="#home" data-section-dot data-section-target="home" aria-label="Home"></a>
+    <a href="#intro" data-section-dot data-section-target="intro" aria-label="About"></a>
+    <a href="#services" data-section-dot data-section-target="services" aria-label="Services"></a>
+    <a href="#skills" data-section-dot data-section-target="skills" aria-label="Skills"></a>
+    <a href="#projects" data-section-dot data-section-target="projects" aria-label="Projects"></a>
+    <a href="#philosophy" data-section-dot data-section-target="philosophy" aria-label="Philosophy"></a>
+    <a href="#experience" data-section-dot data-section-target="experience" aria-label="Experience"></a>
+    <a href="#contact" data-section-dot data-section-target="contact" aria-label="Contact"></a>
+  </div>
+</aside>
+
+<style>
+  .section-indicator { position: fixed; left: 2.4rem; top: 50%; z-index: 40; display: flex; align-items: center; gap: 1rem; opacity: 0; transform: translateY(-50%) translateX(-10px); pointer-events: none; transition: opacity 500ms var(--ease-out-expo), transform 500ms var(--ease-out-expo); }
+  .section-indicator.is-visible { opacity: 1; transform: translateY(-50%) translateX(0); pointer-events: auto; }
+  .section-indicator-line { position: absolute; left: 3px; top: 0; bottom: 0; width: 1px; background: var(--color-border); }
+  .section-dots { display: flex; flex-direction: column; gap: 1.6rem; }
+  .section-dots a { position: relative; display: block; width: 7px; height: 7px; border: 1px solid var(--color-text-muted); border-radius: 50%; background: var(--color-bg-primary); transition: transform 300ms var(--ease-out-expo), background 300ms var(--ease-soft), border-color 300ms var(--ease-soft), box-shadow 300ms var(--ease-soft); }
+  .section-dots a::after { content: attr(aria-label); position: absolute; left: 1.8rem; top: 50%; color: var(--color-text-secondary); font: 1rem var(--font-mono); opacity: 0; transform: translateY(-50%) translateX(-4px); white-space: nowrap; transition: opacity 200ms ease, transform 200ms ease; }
+  .section-dots a:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+  .section-dots a.is-active { border-color: var(--color-accent); background: var(--color-accent); box-shadow: 0 0 12px var(--color-accent-glow); transform: scale(1.65); }
+  @media (max-width: 1200px) { .section-indicator { display: none; } }
+</style>

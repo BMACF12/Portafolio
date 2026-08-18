@@ -1,0 +1,10 @@
+<div class="letterbox letterbox-top" data-letterbox aria-hidden="true"></div>
+<div class="letterbox letterbox-bottom" data-letterbox aria-hidden="true"></div>
+
+<style>
+  .letterbox { position: fixed; left: 0; right: 0; height: 0; z-index: 9997; background: #050505; pointer-events: none; transition: height 650ms var(--ease-in-out-expo); }
+  .letterbox-top { top: 0; }
+  .letterbox-bottom { bottom: 0; }
+  :global(html.is-transitioning) .letterbox { height: 12vh; }
+  @media (prefers-reduced-motion: reduce) { .letterbox { display: none; } }
+</style>

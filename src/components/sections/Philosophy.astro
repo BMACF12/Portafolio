@@ -1,0 +1,110 @@
+---
+import { type Locale, useTranslations } from '../../utils/i18n';
+import SectionLabel from '../ui/SectionLabel.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="philosophy" id="philosophy" data-section="philosophy">
+  <div class="container">
+    <SectionLabel label={t.philosophy.label} number="05" align="center" />
+
+    <blockquote class="philosophy-quote">
+      <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+      <p class="quote-text font-display" data-split-text data-quote-mask>
+        {t.philosophy.quote}
+      </p>
+      <footer class="quote-author reveal">
+        <span class="author-line"></span>
+        <cite class="author-name">— {t.philosophy.author}</cite>
+      </footer>
+    </blockquote>
+  </div>
+</section>
+
+<style>
+  .philosophy {
+    padding: var(--section-spacing) 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .philosophy::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background: radial-gradient(circle, var(--color-accent-glow), transparent 70%);
+    filter: blur(120px);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .philosophy :global(.section-label) {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-6);
+  }
+
+  .philosophy-quote {
+    position: relative;
+    max-width: 110rem;
+    margin: 0 auto;
+    text-align: center;
+    padding: var(--space-6) var(--space-3);
+  }
+
+  .quote-mark {
+    position: absolute;
+    top: -3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: 25rem;
+    color: var(--color-accent);
+    opacity: 0.15;
+    line-height: 1;
+  }
+
+  .quote-text {
+    font-size: var(--text-display-3);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--color-text-primary);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quote-author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .author-line {
+    display: inline-block;
+    width: 4rem;
+    height: 1px;
+    background: var(--color-accent);
+  }
+
+  .author-name {
+    font-family: var(--font-mono);
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--color-accent);
+    font-style: normal;
+  }
+</style>

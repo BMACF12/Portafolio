@@ -1,0 +1,19 @@
+// @ts-check
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  output: 'server',
+  redirects: {
+    '/servicios': '/#services',
+    '/habilidades': '/#skills',
+    '/proyectos': '/#projects',
+    '/experiencia': '/#experience',
+    '/contacto': '/#contact',
+    '/cv': '/cv/Brian_Flores_CV.pdf',
+    '/services': '/en#services',
+    '/skills': '/en#skills',
+    '/projects': '/en#projects',
+    '/experience': '/en#experience',
+    '/contact': '/en#contact',
+  },
+});

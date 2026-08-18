@@ -1,0 +1,48 @@
+---
+interface Props {
+  label: string;
+  number?: string;
+  align?: 'left' | 'center' | 'right';
+}
+
+const { label, number, align = 'left' } = Astro.props;
+---
+
+<div class:list={['section-label reveal', `align-${align}`]}>
+  {number && <span class="section-number">{number}</span>}
+  <span class="section-divider"></span>
+  <span class="section-text">{label}</span>
+</div>
+
+<style>
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-5);
+  }
+  .align-center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .align-right {
+    margin-left: auto;
+  }
+  .section-number {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .section-divider {
+    width: 4rem;
+    height: 1px;
+    background: var(--color-accent);
+  }
+  .section-text {
+    color: var(--color-accent);
+  }
+</style>

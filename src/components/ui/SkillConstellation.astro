@@ -1,0 +1,121 @@
+---
+import type { Locale } from '../../utils/i18n';
+
+interface Skill {
+  name: string;
+  level: number;
+}
+
+interface Props {
+  locale: Locale;
+  categories: { name: string; skills: Skill[] }[];
+}
+
+const { locale, categories } = Astro.props;
+
+const positions = [
+  [175, 150], [335, 80], [500, 165], [250, 280], [440, 315], [605, 260],
+  [175, 475], [350, 410], [535, 505], [705, 420], [820, 300], [790, 125],
+] as const;
+
+// Never render more nodes than we have coordinates for.
+const perCategory = Math.max(1, Math.floor(positions.length / Math.max(1, categories.length)));
+
+const nodes = categories
+  .flatMap((category, categoryIndex) =>
+    category.skills.slice(0, perCategory).map((skill, skillIndex) => ({
+      ...skill,
+      category: category.name,
+      categoryIndex,
+      skillIndex,
+    }))
+  )
+  .slice(0, positions.length);
+
+const edges = [[0,1],[0,3],[1,2],[1,4],[2,5],[3,4],[4,5],[3,7],[4,7],[5,8],[5,9],[6,7],[7,8],[8,9],[9,10],[10,11],[2,11]]
+  .filter(([from, to]) => from < nodes.length && to < nodes.length);
+---
+
+<div class="constellation" data-constellation data-spotlight>
+  <div class="constellation-topline">
+    <span class="constellation-status"><i></i>{locale === 'es' ? 'Sistema de habilidades' : 'Skill system'}</span>
+    <span class="constellation-hint">{locale === 'es' ? 'Explora los nodos' : 'Explore the nodes'} <span>↗</span></span>
+  </div>
+
+  <svg class="constellation-svg" viewBox="0 0 1000 600" role="img" aria-label={locale === 'es' ? 'Mapa interactivo de habilidades' : 'Interactive skills map'}>
+    <defs>
+      <filter id="node-glow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="5" result="blur" />
+        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
+      <linearGradient id="edge-gradient" x1="0" x2="1">
+        <stop offset="0" stop-color="var(--color-accent)" stop-opacity=".15" />
+        <stop offset=".5" stop-color="var(--color-accent)" stop-opacity=".75" />
+        <stop offset="1" stop-color="var(--color-accent)" stop-opacity=".15" />
+      </linearGradient>
+    </defs>
+
+    <g class="constellation-edges" aria-hidden="true">
+      {edges.map(([from, to]) => {
+        const start = positions[from] ?? [0, 0];
+        const end = positions[to] ?? [0, 0];
+        return <line x1={start[0]} y1={start[1]} x2={end[0]} y2={end[1]} data-edge-from={from} data-edge-to={to} />;
+      })}
+    </g>
+
+    <g class="constellation-nodes">
+      {nodes.map((node, index) => {
+        const [x = 0, y = 0] = positions[index] ?? [];
+        return (
+          <g class="skill-node" data-skill-node data-node-index={index} data-category={node.categoryIndex} tabindex="0" role="button" aria-label={`${node.name}: ${node.level}%`} transform={`translate(${x} ${y})`}>
+            <circle class="node-pulse" r="27" />
+            <circle class="node-circle" r="17" />
+            <circle class="node-core" r="5" />
+            <text class="node-label" x="26" y="5">{node.name}</text>
+            <text class="node-level" x="26" y="22">{node.level}%</text>
+          </g>
+        );
+      })}
+    </g>
+  </svg>
+
+  <div class="constellation-legend">
+    {categories.map((category, index) => (
+      <span data-legend-category={index}><i></i>{category.name}</span>
+    ))}
+  </div>
+</div>
+
+<style>
+  .constellation { position: relative; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid var(--color-border); border-radius: var(--radius-2xl); background: color-mix(in srgb, var(--color-bg-secondary) 82%, transparent); overflow: hidden; }
+  .constellation::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--color-accent-glow), transparent 52%); opacity: .18; pointer-events: none; }
+  .constellation-topline, .constellation-legend { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .constellation-status, .constellation-hint, .constellation-legend span { font: 1.1rem var(--font-mono); text-transform: uppercase; letter-spacing: .16em; color: var(--color-text-muted); }
+  .constellation-status { color: var(--color-accent); }
+  .constellation-status i, .constellation-legend i { display: inline-block; width: .6rem; height: .6rem; margin-right: .7rem; border-radius: 50%; background: var(--color-accent); box-shadow: 0 0 10px var(--color-accent); }
+  .constellation-hint span { color: var(--color-accent); font-size: 1.5rem; }
+  .constellation-svg { display: block; width: 100%; min-height: 34rem; margin: 1rem 0; overflow: visible; }
+  .constellation-edges line { stroke: url(#edge-gradient); stroke-width: 1.5; stroke-dasharray: 5 8; opacity: .5; vector-effect: non-scaling-stroke; }
+  .constellation-edges line.is-related { stroke: var(--color-accent-hover); stroke-width: 3; opacity: 1; filter: url(#node-glow); }
+  .skill-node { cursor: pointer; outline: none; transform-box: fill-box; transform-origin: center; transition: filter 250ms ease; }
+  .skill-node .node-pulse { fill: var(--color-accent); opacity: 0; }
+  .skill-node .node-circle { fill: var(--color-bg-tertiary); stroke: var(--color-accent); stroke-width: 1.5; }
+  .skill-node .node-core { fill: var(--color-accent); }
+  .skill-node .node-label { fill: var(--color-text-primary); font: 600 14px var(--font-body); pointer-events: none; }
+  .skill-node .node-level { fill: var(--color-accent); font: 11px var(--font-mono); pointer-events: none; }
+  .skill-node:hover, .skill-node:focus-visible { filter: url(#node-glow); }
+  .skill-node.is-focused .node-pulse { opacity: .18; animation: node-pulse 1.2s ease-out infinite; }
+  .skill-node:hover .node-circle, .skill-node:focus-visible .node-circle { fill: var(--color-accent); }
+  .skill-node:hover .node-label, .skill-node:focus-visible .node-label { fill: var(--color-text-primary); }
+  .constellation-legend { justify-content: flex-start; flex-wrap: wrap; gap: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border); }
+  .constellation-legend span:nth-child(2) i { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+  .constellation-legend span:nth-child(3) i { background: #60a5fa; box-shadow: 0 0 10px #60a5fa; }
+  @media (max-width: 700px) {
+    .constellation-svg { min-height: 28rem; }
+    .skill-node .node-label { font-size: 12px; }
+    .skill-node .node-level { font-size: 9px; }
+    .constellation-hint { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .constellation-edges line { stroke-dasharray: none; } }
+  @keyframes node-pulse { 0%, 100% { transform: scale(.7); opacity: .1; } 50% { transform: scale(1.25); opacity: .3; } }
+</style>

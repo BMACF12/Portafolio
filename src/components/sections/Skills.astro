@@ -1,0 +1,27 @@
+---
+import { type Locale, useTranslations } from '../../utils/i18n';
+import SectionLabel from '../ui/SectionLabel.astro';
+import SkillConstellation from '../ui/SkillConstellation.astro';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="skills" id="skills" data-section="skills">
+  <div class="container">
+    <div class="skills-header">
+      <SectionLabel label={t.skills.label} number="03" />
+      <h2 class="skills-title font-display reveal">{t.skills.title}</h2>
+      <p class="skills-subtitle reveal">{locale === 'es' ? 'Una red viva de tecnologías, herramientas y curiosidad constante.' : 'A living network of technologies, tools and constant curiosity.'}</p>
+    </div>
+    <SkillConstellation locale={locale} categories={t.skills.categories} />
+  </div>
+</section>
+
+<style>
+  .skills { padding: var(--section-spacing) 0; position: relative; }
+  .skills-header { text-align: center; margin-bottom: var(--space-6); }
+  .skills-title { font-size: var(--text-display-3); font-weight: 700; letter-spacing: -.03em; color: var(--color-text-primary); }
+  .skills-subtitle { max-width: 55ch; margin: 1.5rem auto 0; color: var(--color-text-secondary); font-size: var(--text-body-lg); }
+</style>

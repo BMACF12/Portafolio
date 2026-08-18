@@ -1,0 +1,139 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SectionLabel from '../../../components/ui/SectionLabel.astro';
+import { useTranslations } from '../../../utils/i18n';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const entries = await getCollection('projects', ({ data }) => data.lang === 'en');
+  return entries.map((entry) => ({
+    params: { slug: entry.id.split('/')[1] },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const t = useTranslations('en');
+
+const others = (await getCollection('projects', ({ data: d, id }) => d.lang === 'en' && id !== entry.id))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 2);
+---
+
+<BaseLayout locale="en" title={data.title} description={data.description}>
+  <article class="project-detail" data-section="projects">
+    <div class="container">
+      <a href="/en/projects" class="back-link">← {t.projects.backToProjects}</a>
+
+      <header class="detail-header">
+        <SectionLabel label={`${t.projects.label} / ${data.year}`} number={String(data.order).padStart(2, '0')} />
+        <h1 class="detail-title font-display" data-split-text>{data.title}</h1>
+        <p class="detail-desc reveal">{data.description}</p>
+
+        <div class="detail-meta reveal">
+          <span class:list={['meta-status', `status-${data.status}`]}>{t.projects.statusLabels[data.status]}</span>
+          <div class="meta-tags">
+            {data.tags.map((tag) => <span class="meta-tag">{tag}</span>)}
+          </div>
+        </div>
+
+        <div class="detail-actions reveal-stagger">
+          {data.github && (
+            <a href={data.github} target="_blank" rel="noopener noreferrer" class="detail-btn detail-btn-primary magnetic">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-5.37-5.37-12-12-12z"></path></svg>
+              <span>{t.projects.viewCode}</span>
+            </a>
+          )}
+          {data.demo && (
+            <a href={data.demo} target="_blank" rel="noopener noreferrer" class="detail-btn detail-btn-ghost magnetic">
+              <span>{t.projects.liveDemo}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+            </a>
+          )}
+        </div>
+      </header>
+
+      {data.highlights.length > 0 && (
+        <div class="detail-highlights reveal" data-spotlight>
+          <span class="highlights-label">{t.projects.highlights}</span>
+          <ul role="list">
+            {data.highlights.map((h) => (
+              <li><span class="highlight-arrow">→</span><span>{h}</span></li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div class="detail-content reveal">
+        <Content />
+      </div>
+
+      {others.length > 0 && (
+        <aside class="detail-others">
+          <h2 class="others-title font-display">{t.projects.otherProjects}</h2>
+          <div class="others-grid">
+            {others.map((other) => (
+              <a href={`/en/projects/${other.id.split('/')[1]}`} class="other-card" data-spotlight>
+                <span class="other-year">{other.data.year}</span>
+                <h3 class="other-title">{other.data.title}</h3>
+                <span class="other-link">{t.projects.viewProject} →</span>
+              </a>
+            ))}
+          </div>
+        </aside>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-detail { min-height: 100vh; padding: calc(var(--header-height) + var(--space-6)) 0 var(--space-12); }
+  .back-link { display: inline-block; font-family: var(--font-mono); font-size: 1.2rem; color: var(--color-text-secondary); margin-bottom: var(--space-5); transition: color var(--transition-base); }
+  .back-link:hover { color: var(--color-accent); }
+  .detail-header { max-width: 90rem; margin-bottom: var(--space-6); }
+  .detail-title { font-size: var(--text-display-2); font-weight: 700; letter-spacing: -.04em; line-height: 1; margin-bottom: var(--space-3); }
+  .detail-desc { font-size: var(--text-body-lg); color: var(--color-text-secondary); max-width: 65ch; margin-bottom: var(--space-4); }
+  .detail-meta { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-4); }
+  .meta-status { font-family: var(--font-mono); font-size: 1.2rem; text-transform: uppercase; letter-spacing: .2em; color: #4ade80; padding: .5rem 1.2rem; border: 1px solid currentColor; border-radius: var(--radius-full); }
+  .meta-status.status-in-progress { color: #f59e0b; }
+  .meta-status.status-archived { color: var(--color-text-muted); }
+  .meta-tags { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .meta-tag { padding: .5rem 1rem; background: var(--color-bg-tertiary); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 1.2rem; color: var(--color-text-secondary); }
+  .detail-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .detail-btn { display: inline-flex; align-items: center; gap: .8rem; padding: 1.3rem 2.4rem; border-radius: var(--radius-full); font-size: 1.4rem; font-weight: 600; transition: all var(--transition-base); }
+  .detail-btn svg { width: 1.8rem; height: 1.8rem; }
+  .detail-btn-primary { background: var(--color-accent); color: var(--color-text-inverse); box-shadow: var(--shadow-glow); }
+  .detail-btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow-lg); }
+  .detail-btn-ghost { border: 1.5px solid var(--color-border); color: var(--color-text-primary); }
+  .detail-btn-ghost:hover { border-color: var(--color-accent); color: var(--color-accent); }
+  .detail-highlights { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--space-5); margin-bottom: var(--space-6); }
+  .highlights-label { display: block; font-family: var(--font-mono); font-size: 1.2rem; text-transform: uppercase; letter-spacing: .2em; color: var(--color-text-muted); margin-bottom: 1.2rem; }
+  .detail-highlights ul { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+  .detail-highlights li { display: flex; gap: 1rem; font-size: 1.5rem; color: var(--color-text-secondary); line-height: 1.5; }
+  .highlight-arrow { color: var(--color-accent); font-weight: 700; flex-shrink: 0; }
+  .detail-content { max-width: 80ch; font-size: 1.6rem; line-height: 1.8; color: var(--color-text-secondary); }
+  .detail-content :global(h2) { font-family: var(--font-display); font-size: var(--text-h2); color: var(--color-text-primary); margin: var(--space-5) 0 var(--space-3); letter-spacing: -.02em; }
+  .detail-content :global(p) { margin-bottom: var(--space-3); }
+  .detail-content :global(ul) { margin: 0 0 var(--space-3) var(--space-4); }
+  .detail-content :global(li) { margin-bottom: .8rem; }
+  .detail-content :global(blockquote) { border-left: 3px solid var(--color-accent); padding-left: var(--space-3); margin: var(--space-4) 0; color: var(--color-text-muted); font-style: italic; }
+  .detail-content :global(code) { font-family: var(--font-mono); background: var(--color-bg-tertiary); padding: .2rem .6rem; border-radius: var(--radius-sm); font-size: 1.4rem; }
+  .detail-others { margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--color-border); }
+  .others-title { font-size: var(--text-h2); font-weight: 700; margin-bottom: var(--space-4); letter-spacing: -.02em; }
+  .others-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-3); }
+  @media (min-width: 768px) { .others-grid { grid-template-columns: repeat(2, 1fr); } }
+  .other-card { display: flex; flex-direction: column; gap: .8rem; padding: var(--space-4); background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-xl); transition: all var(--transition-base); }
+  .other-card:hover { border-color: var(--color-accent); transform: translateY(-4px); }
+  .other-year { font-family: var(--font-mono); font-size: 1.1rem; color: var(--color-text-muted); }
+  .other-title { font-family: var(--font-display); font-size: var(--text-h3); font-weight: 700; letter-spacing: -.02em; }
+  .other-link { color: var(--color-accent); font-weight: 600; font-size: 1.3rem; }
+</style>

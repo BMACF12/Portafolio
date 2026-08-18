@@ -1,0 +1,55 @@
+---
+import { type Locale, getLocaleLabel, getOppositeLocale } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+  currentPath: string;
+}
+
+const { locale, currentPath } = Astro.props;
+const otherLocale = getOppositeLocale(locale);
+
+const switchHref = (() => {
+  if (locale === 'es') {
+    return currentPath === '/' ? '/en' : `/en${currentPath}`;
+  }
+  return currentPath.replace(/^\/en/, '') || '/';
+})();
+---
+
+<a href={switchHref} class="lang-switcher" aria-label={`Switch to ${getLocaleLabel(otherLocale)}`}>
+  <span class:list={['lang-option', { active: locale === 'es' }]}>ES</span>
+  <span class="lang-divider">/</span>
+  <span class:list={['lang-option', { active: locale === 'en' }]}>EN</span>
+</a>
+
+<style>
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-full);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all var(--transition-base);
+  }
+  .lang-switcher:hover {
+    border-color: var(--color-accent);
+    background: var(--color-bg-elevated);
+  }
+  .lang-option {
+    color: var(--color-text-muted);
+    transition: color var(--transition-base);
+  }
+  .lang-option.active {
+    color: var(--color-accent);
+  }
+  .lang-divider {
+    color: var(--color-text-muted);
+    opacity: 0.4;
+  }
+</style>

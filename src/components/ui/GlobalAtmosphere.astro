@@ -1,0 +1,99 @@
+<div class="global-atmosphere" aria-hidden="true">
+  <div class="global-grid"></div>
+  <div class="global-aurora" data-aurora></div>
+  <div class="global-orb global-orb-1"></div>
+  <div class="global-orb global-orb-2"></div>
+  <div class="global-noise"></div>
+</div>
+
+<style>
+  .global-atmosphere,
+  .global-grid,
+  .global-aurora,
+  .global-noise,
+  .global-orb {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+  .global-atmosphere {
+    z-index: 0;
+    overflow: hidden;
+    background: transparent;
+    transition: background-color 700ms var(--ease-soft);
+  }
+  .global-grid {
+    z-index: 0;
+    opacity: var(--grid-opacity, 0.05);
+    background-image:
+      linear-gradient(var(--grid-color, rgba(230, 57, 70, 0.9)) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color, rgba(230, 57, 70, 0.9)) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: radial-gradient(ellipse at center, black 25%, transparent 86%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 86%);
+    transform: translate3d(0, var(--grid-drift, var(--bg-drift, 0px)), 0) scale(var(--bg-zoom, 1));
+    transform-origin: 50% 50%;
+    will-change: transform;
+    transition: opacity 700ms var(--ease-soft), transform 900ms var(--ease-out-expo);
+  }
+  .global-aurora {
+    z-index: 1;
+    width: 42rem;
+    height: 42rem;
+    inset: auto;
+    left: var(--aurora-x, 50vw);
+    top: var(--aurora-y, 35vh);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--aurora-color, rgba(230, 57, 70, 0.16)), transparent 68%);
+    filter: blur(55px);
+    opacity: calc(var(--aurora-opacity, 0.8) * var(--bg-pulse, 1));
+    transform: translate3d(-50%, calc(-50% + var(--aurora-drift, 0px)), 0) scale(calc(0.95 + var(--bg-pulse, 1) * 0.05));
+    transition: opacity 600ms var(--ease-soft), background 700ms var(--ease-soft);
+    will-change: left, top, transform, opacity;
+  }
+  .global-orb {
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    opacity: 0.35;
+    transform: translate3d(0, var(--bg-drift, 0px), 0) scale(var(--bg-zoom, 1));
+    will-change: transform;
+    transition: transform 1100ms var(--ease-out-expo);
+  }
+  .global-orb-1 {
+    width: 28rem;
+    height: 28rem;
+    left: -10vw;
+    top: 20vh;
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.35), transparent 70%);
+  }
+  .global-orb-2 {
+    width: 34rem;
+    height: 34rem;
+    right: -12vw;
+    bottom: 12vh;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.25), transparent 70%);
+  }
+  .global-noise {
+    z-index: 2;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+    mix-blend-mode: soft-light;
+  }
+  :global(html.light) .global-grid {
+    --grid-color: rgba(214, 40, 40, 0.55);
+  }
+  :global(html.light) .global-noise {
+    opacity: 0.02;
+    mix-blend-mode: multiply;
+  }
+  @media (max-width: 700px) {
+    .global-grid { background-size: 34px 34px; opacity: 0.035; --bg-zoom: 1; }
+    .global-aurora { width: 26rem; height: 26rem; filter: blur(45px); }
+    .global-orb-1, .global-orb-2 { width: 18rem; height: 18rem; opacity: 0.22; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .global-aurora { left: 50vw; top: 30vh; transition: none; --bg-zoom: 1; --bg-pulse: 1; }
+    .global-orb { display: none; }
+  }
+</style>

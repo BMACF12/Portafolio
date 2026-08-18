@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#1a0a0e"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.7" cy="0.3" r="0.6">
+      <stop offset="0%" stop-color="#e63946" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#e63946" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#e63946" stroke-width="0.5" opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g transform="translate(80, 80)">
+    <rect width="80" height="80" rx="18" fill="#e63946"/>
+    <text x="40" y="56" font-family="Space Grotesk,Arial,sans-serif" font-size="40" font-weight="700" fill="#0a0a0a" text-anchor="middle" letter-spacing="-2">BF</text>
+  </g>
+  <g transform="translate(80, 230)">
+    <text font-family="Space Grotesk,Arial,sans-serif" font-size="32" fill="#e63946" letter-spacing="6">FULL-STACK DEVELOPER</text>
+    <text y="140" font-family="Space Grotesk,Arial,sans-serif" font-size="110" font-weight="700" fill="#fafafa" letter-spacing="-4">Brian Flores</text>
+    <text y="210" font-family="Space Grotesk,Arial,sans-serif" font-size="30" fill="#a0a0a0" letter-spacing="-1">Angular · TypeScript · Flutter</text>
+  </g>
+  <g transform="translate(80, 540)">
+    <rect x="0" y="-30" width="40" height="2" fill="#e63946"/>
+    <text y="0" font-family="JetBrains Mono,monospace" font-size="20" fill="#a0a0a0" letter-spacing="2">BRIANFLORES.DEV</text>
+  </g>
+</svg>

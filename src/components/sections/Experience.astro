@@ -1,0 +1,172 @@
+---
+import { type Locale, useTranslations } from '../../utils/i18n';
+import SectionLabel from '../ui/SectionLabel.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="experience" id="experience" data-section="experience">
+  <div class="container">
+    <div class="exp-header">
+      <SectionLabel label={t.nav.experience} number="06" />
+      <h2 class="exp-title font-display reveal">{locale === 'es' ? 'Mi viaje' : 'My journey'}</h2>
+    </div>
+
+    <ol class="timeline" role="list">
+      <li class="timeline-item reveal">
+        <div class="timeline-marker">
+          <span class="timeline-dot"></span>
+          <span class="timeline-line"></span>
+        </div>
+        <div class="timeline-content">
+          <span class="timeline-date">2023 — {locale === 'es' ? 'Actualidad' : 'Present'}</span>
+          <h3 class="timeline-title font-display">{locale === 'es' ? 'Estudiante de Ingeniería en Software' : 'Software Engineering Student'}</h3>
+          <p class="timeline-place">Universidad de las Fuerzas Armadas ESPE · Ecuador</p>
+          <p class="timeline-desc">
+            {locale === 'es'
+              ? 'Formación en desarrollo de software, arquitecturas, bases de datos y metodologías ágiles. Trabajo en proyectos académicos y personales con Angular, Flutter y TypeScript.'
+              : 'Education in software development, architectures, databases and agile methodologies. Working on academic and personal projects with Angular, Flutter and TypeScript.'}
+          </p>
+        </div>
+      </li>
+
+      <li class="timeline-item reveal">
+        <div class="timeline-marker">
+          <span class="timeline-dot"></span>
+          <span class="timeline-line"></span>
+        </div>
+        <div class="timeline-content">
+          <span class="timeline-date">2024</span>
+          <h3 class="timeline-title font-display">{locale === 'es' ? 'Proyectos Freelance' : 'Freelance Projects'}</h3>
+          <p class="timeline-place">{locale === 'es' ? 'Varios clientes · Remoto' : 'Various clients · Remote'}</p>
+          <p class="timeline-desc">
+            {locale === 'es'
+              ? 'Desarrollo de aplicaciones web y móviles para clientes reales, desde landing pages hasta aplicaciones complejas con backend.'
+              : 'Web and mobile app development for real clients, from landing pages to complex applications with backend.'}
+          </p>
+        </div>
+      </li>
+
+      <li class="timeline-item reveal">
+        <div class="timeline-marker">
+          <span class="timeline-dot"></span>
+          <span class="timeline-line"></span>
+        </div>
+        <div class="timeline-content">
+          <span class="timeline-date">2022</span>
+          <h3 class="timeline-title font-display">{locale === 'es' ? 'Primeros pasos en código' : 'First steps in code'}</h3>
+          <p class="timeline-place">{locale === 'es' ? 'Autodidacta · Ecuador' : 'Self-taught · Ecuador'}</p>
+          <p class="timeline-desc">
+            {locale === 'es'
+              ? 'Descubrí la programación y comencé a construir proyectos propios: calculadoras, sitios web estáticos, pequeños bots. Ese fue el inicio del camino.'
+              : 'I discovered programming and started building personal projects: calculators, static websites, small bots. That was the beginning of the journey.'}
+          </p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<style>
+  .experience {
+    padding: var(--section-spacing) 0;
+    background: var(--color-bg-secondary);
+    position: relative;
+  }
+
+  .exp-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .exp-title {
+    font-size: var(--text-display-3);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+  }
+
+  .timeline {
+    list-style: none;
+    max-width: 80rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+
+  .timeline-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding-top: 1rem;
+  }
+
+  .timeline-dot {
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 12px var(--color-accent-glow);
+    flex-shrink: 0;
+  }
+
+  .timeline-line {
+    width: 2px;
+    flex-grow: 1;
+    background: var(--color-border);
+    margin-top: 1rem;
+    min-height: 8rem;
+  }
+
+  .timeline-item:last-child .timeline-line {
+    display: none;
+  }
+
+  .timeline-content {
+    padding-bottom: var(--space-2);
+  }
+
+  .timeline-date {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--color-accent);
+    margin-bottom: 0.8rem;
+  }
+
+  .timeline-title {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .timeline-place {
+    font-size: 1.4rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-2);
+  }
+
+  .timeline-desc {
+    font-size: 1.5rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+</style>

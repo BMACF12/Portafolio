@@ -1,0 +1,248 @@
+---
+import { type Locale, useTranslations } from '../../utils/i18n';
+import SectionLabel from '../ui/SectionLabel.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const serviceIcons = [
+  'web',
+  'mobile',
+  'api',
+  'ui',
+  'optimization',
+  'consulting',
+];
+---
+
+<section class="services" id="services" data-section="services">
+  <div class="container">
+    <div class="services-header">
+      <SectionLabel label={t.services.label} number="02" />
+      <h2 class="services-title font-display reveal">{t.services.title}</h2>
+    </div>
+
+    <div class="services-grid reveal-stagger">
+      {t.services.items.map((service, idx) => (
+        <article class="service-card magnetic" data-spotlight>
+          <div class="service-card-number">0{idx + 1}</div>
+          <div class="service-card-icon" aria-hidden="true">
+            {serviceIcons[idx] === 'web' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+            )}
+            {serviceIcons[idx] === 'mobile' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="5" y="2" width="14" height="20" rx="2" />
+                <line x1="12" y1="18" x2="12" y2="18" />
+              </svg>
+            )}
+            {serviceIcons[idx] === 'api' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 12h16M4 6h16M4 18h16" />
+                <circle cx="8" cy="6" r="1" fill="currentColor" />
+                <circle cx="8" cy="18" r="1" fill="currentColor" />
+              </svg>
+            )}
+            {serviceIcons[idx] === 'ui' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" />
+              </svg>
+            )}
+            {serviceIcons[idx] === 'optimization' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M13 2L3 14h7l-1 8 11-14h-7l0-6z" />
+              </svg>
+            )}
+            {serviceIcons[idx] === 'consulting' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 11.5a8.38 8.38 0 01-9 8.5 8.5 8.5 0 01-8.5-8.5A8.38 8.38 0 0110.5 3a8.5 8.5 0 0110.5 8.5z" />
+                <path d="M8 12a4 4 0 108 0 4 4 0 00-8 0z" />
+              </svg>
+            )}
+          </div>
+          <h3 class="service-card-title font-display">{service.title}</h3>
+          <p class="service-card-desc">{service.description}</p>
+          <div class="service-card-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .services {
+    padding: var(--section-spacing) 0;
+    background: var(--color-bg-secondary);
+    position: relative;
+  }
+
+  .services::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-accent),
+      transparent
+    );
+    opacity: 0.5;
+  }
+
+  .services-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .services-title {
+    font-size: var(--text-display-3);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 768px) {
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .service-card {
+    position: relative;
+    padding: var(--space-5);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--transition-slow);
+    cursor: pointer;
+    min-height: 32rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .service-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at top right,
+      var(--color-accent-glow),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity var(--transition-slow);
+  }
+
+  .service-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .service-card:hover::before {
+    opacity: 1;
+  }
+
+  .service-card-number {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+
+  .service-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-secondary);
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+    transition: all var(--transition-base);
+  }
+
+  .service-card:hover .service-card-icon {
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+    transform: rotate(-6deg);
+  }
+
+  .service-card-icon svg {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .service-card-title {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+    letter-spacing: -0.02em;
+  }
+
+  .service-card-desc {
+    font-size: 1.5rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+    flex-grow: 1;
+  }
+
+  .service-card-arrow {
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 50%;
+    background: var(--color-bg-secondary);
+    color: var(--color-accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    transition: all var(--transition-base);
+  }
+
+  .service-card:hover .service-card-arrow {
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+    transform: translateX(6px);
+  }
+
+  .service-card-arrow svg {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+</style>

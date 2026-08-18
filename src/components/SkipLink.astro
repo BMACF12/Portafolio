@@ -1,0 +1,43 @@
+---
+import type { Locale } from '../utils/i18n';
+
+export interface Props {
+  locale: Locale;
+  defaultLocale: Locale;
+}
+
+const { locale, defaultLocale } = Astro.props;
+const t = locale === 'en'
+  ? (await import('../i18n/en.json')).default
+  : (await import('../i18n/es.json')).default;
+---
+
+<a href="#main-content" class="skip-link">{t.nav.skipToContent}</a>
+
+<div class="theme-fade-overlay" aria-hidden="true"></div>
+
+<style>
+  .theme-fade-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--color-bg-primary);
+    z-index: 9998;
+    pointer-events: none;
+    animation: fade-out 600ms var(--ease-soft, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+  }
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+</style>
+
+<style is:global define:vars={{ lang: locale, defaultLang: defaultLocale }}>
+  html[lang] {
+    /* used by scripts to know which language is active */
+  }
+</style>

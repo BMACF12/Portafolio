@@ -1,0 +1,181 @@
+{
+  "meta": {
+    "title": "Brian Flores | Full-Stack Developer",
+    "description": "Software Developer specialized in Angular, TypeScript and Flutter. I build modern, fast and accessible digital experiences.",
+    "ogDescription": "Brian Flores's Portfolio — Full-Stack Developer based in Ecuador, specialized in Angular and Flutter.",
+    "keywords": ["developer", "full-stack", "angular", "typescript", "flutter", "ecuador", "portfolio"],
+    "author": "Brian Flores",
+    "locale": "en-US"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "skills": "Skills",
+    "projects": "Projects",
+    "experience": "Experience",
+    "contact": "Contact",
+    "cv": "Download CV",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "skipToContent": "Skip to main content"
+  },
+  "hero": {
+    "greeting": "Hi, I'm",
+    "name": "Brian Flores",
+    "tagline": "Software Engineer",
+    "rotatingTexts": [
+      "Full-Stack Developer",
+      "Angular & TypeScript",
+      "Flutter & Dart",
+      "Passionate about code"
+    ],
+    "description": "I build digital products people love. Specialized in web and mobile experiences with an obsessive focus on detail.",
+    "cta": {
+      "primary": "See my work",
+      "secondary": "Let's talk"
+    },
+    "scrollIndicator": "Scroll to discover"
+  },
+  "intro": {
+    "label": "About me",
+    "title": "I design and build",
+    "titleAccent": "digital experiences",
+    "paragraphs": [
+      "I'm a Software Engineer in training at Universidad de las Fuerzas Armadas ESPE in Ecuador. I combine a solid academic foundation with hands-on experience building real-world applications.",
+      "My focus is on modern frontend: scalable architectures in Angular, accessible interfaces and fluid mobile experiences with Flutter. Every project is an opportunity to learn something new.",
+      "When I'm not coding, you'll find me reading about software architecture, contributing to open source or experimenting with new technologies."
+    ]
+  },
+  "services": {
+    "label": "Services",
+    "title": "What I do",
+    "items": [
+      {
+        "title": "Web Development",
+        "description": "SPA and SSR applications with Angular, TypeScript and the latest frontend ecosystem practices."
+      },
+      {
+        "title": "Mobile Development",
+        "description": "Cross-platform apps with Flutter and Dart, focused on performance and native experience."
+      },
+      {
+        "title": "APIs & Backend",
+        "description": "Integration with RESTful services, JWT authentication and modern serverless architectures."
+      },
+      {
+        "title": "UI/UX Engineering",
+        "description": "Intuitive, accessible and responsive interfaces with Tailwind, smooth animations with GSAP."
+      },
+      {
+        "title": "Web Optimization",
+        "description": "Lightning-fast websites: performance techniques, technical SEO and Core Web Vitals."
+      },
+      {
+        "title": "Technical Consulting",
+        "description": "Code review, project architecture and mentoring for junior teams."
+      }
+    ]
+  },
+  "skills": {
+    "label": "Stack",
+    "title": "My toolbox",
+    "categories": [
+      {
+        "name": "Frontend",
+        "skills": [
+          { "name": "Angular", "level": 90 },
+          { "name": "TypeScript", "level": 88 },
+          { "name": "JavaScript", "level": 92 },
+          { "name": "HTML & CSS", "level": 95 },
+          { "name": "Tailwind CSS", "level": 90 },
+          { "name": "RxJS", "level": 80 }
+        ]
+      },
+      {
+        "name": "Mobile",
+        "skills": [
+          { "name": "Flutter", "level": 85 },
+          { "name": "Dart", "level": 82 },
+          { "name": "Firebase", "level": 78 },
+          { "name": "REST APIs", "level": 88 },
+          { "name": "Push Notifications", "level": 75 },
+          { "name": "State Management", "level": 80 }
+        ]
+      },
+      {
+        "name": "Tools & More",
+        "skills": [
+          { "name": "Git & GitHub", "level": 90 },
+          { "name": "Scrum / Kanban", "level": 85 },
+          { "name": "Figma", "level": 75 },
+          { "name": "Vite / Webpack", "level": 80 },
+          { "name": "Vercel / Netlify", "level": 85 },
+          { "name": "Problem Solving", "level": 92 }
+        ]
+      }
+    ]
+  },
+  "projects": {
+    "label": "Projects",
+    "title": "Things I've built",
+    "subtitle": "A selection of projects where I applied critical thinking and clean code.",
+    "viewProject": "View project",
+    "viewCode": "View code",
+    "liveDemo": "Live demo",
+    "stack": "Stack",
+    "highlights": "Highlights",
+    "coming": "Coming soon",
+    "allProjects": "All projects",
+    "backToProjects": "Back to projects",
+    "otherProjects": "Other projects",
+    "year": "Year",
+    "statusLabel": "Status",
+    "statusLabels": {
+      "completed": "Completed",
+      "in-progress": "In progress",
+      "archived": "Archived"
+    }
+  },
+  "philosophy": {
+    "label": "Philosophy",
+    "quote": "Code is poetry. Every function is a verse, every module a stanza, and the final product is the work the user experiences.",
+    "author": "Brian Flores"
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Shall we build something together?",
+    "subtitle": "I'm available for job opportunities, freelance projects and collaborations.",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send message",
+    "sending": "Sending...",
+    "success": "Thanks! I'll get back to you soon.",
+    "error": "Something went wrong. Please try again.",
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email",
+      "messageRequired": "Message is required",
+      "messageMin": "Message must be at least 10 characters"
+    },
+    "info": {
+      "email": "Email",
+      "location": "Location",
+      "locationValue": "Ecuador · Remote available",
+      "availability": "Availability"
+    }
+  },
+  "footer": {
+    "tagline": "Built with clean code and lots of coffee ☕",
+    "rights": "All rights reserved.",
+    "builtWith": "Built with"
+  },
+  "social": {
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "instagram": "Instagram",
+    "email": "Email"
+  }
+}

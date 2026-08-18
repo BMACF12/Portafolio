@@ -1,0 +1,68 @@
+---
+interface Props {
+  locale?: 'es' | 'en';
+}
+
+const { locale = 'es' } = Astro.props;
+const label = locale === 'en' ? 'Toggle theme' : 'Cambiar tema';
+---
+
+<button
+  class="theme-toggle"
+  type="button"
+  aria-label={label}
+  title={label}
+  data-theme-toggle
+>
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+  </svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.2rem;
+    height: 4.2rem;
+    border-radius: var(--radius-full);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    color: var(--color-accent);
+    transition: all var(--transition-base);
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    background: var(--color-bg-elevated);
+    border-color: var(--color-accent);
+    transform: rotate(15deg);
+  }
+  .theme-toggle svg {
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    transition: opacity var(--transition-base), transform var(--transition-base);
+  }
+  .icon-sun {
+    opacity: 0;
+    transform: scale(0.5) rotate(-90deg);
+  }
+  .icon-moon {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  :global(html.light) .icon-sun {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  :global(html.light) .icon-moon {
+    opacity: 0;
+    transform: scale(0.5) rotate(90deg);
+  }
+</style>

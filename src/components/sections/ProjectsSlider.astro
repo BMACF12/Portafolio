@@ -1,0 +1,540 @@
+---
+import { getCollection } from 'astro:content';
+import { type Locale, useTranslations } from '../../utils/i18n';
+import SectionLabel from '../ui/SectionLabel.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const baseUrl = locale === 'en' ? '/en' : '';
+
+const projects = (await getCollection('projects', ({ data }) => data.lang === locale))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<section class="projects" id="projects" data-section="projects">
+  <div class="projects-pin" data-projects-slider>
+    <div class="projects-track" data-projects-track>
+      <div class="projects-intro" data-projects-intro>
+        <div class="container">
+          <SectionLabel label={t.projects.label} number="04" />
+          <h2 class="projects-title font-display">{t.projects.title}</h2>
+          <p class="projects-subtitle">{t.projects.subtitle}</p>
+          <div class="projects-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
+            <span>{locale === 'es' ? 'Scroll horizontal' : 'Scroll horizontal'}</span>
+          </div>
+        </div>
+      </div>
+
+      {projects.map((project, idx) => (
+        <article class="project-slide" data-project-slide>
+          <div class="container project-slide-inner">
+            <div class="project-slide-number">0{idx + 1}</div>
+
+            <div class="project-slide-content">
+              <span class="project-slide-status">
+                <span class="status-dot"></span>
+                {project.data.status === 'completed' ? project.data.year : t.projects.coming}
+              </span>
+              <h3 class="project-slide-title font-display">{project.data.title}</h3>
+              <p class="project-slide-desc">{project.data.description}</p>
+
+              {project.data.highlights.length > 0 && (
+                <div class="project-slide-highlights">
+                  <span class="highlights-label">{t.projects.highlights}</span>
+                  <ul role="list">
+                    {project.data.highlights.map((h) => (
+                      <li>
+                        <span class="highlight-arrow">→</span>
+                        <span>{h}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div class="project-slide-tags">
+                <span class="tags-label">{t.projects.stack}</span>
+                {project.data.tags.map((tag) => (
+                  <span class="project-tag">{tag}</span>
+                ))}
+              </div>
+
+              <div class="project-slide-actions">
+                <a
+href={`${baseUrl}/projects/${project.id.split('/')[1]}`}
+                  class="project-btn project-btn-primary magnetic"
+                  data-cursor-view
+                >
+                  <span>{t.projects.viewProject}</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M13 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+                {project.data.github && (
+                  <a
+                    href={project.data.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="project-btn project-btn-ghost magnetic"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-5.37-5.37-12-12-12z"></path>
+                    </svg>
+                    <span>{t.projects.viewCode}</span>
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div class="project-slide-visual">
+              <div class="project-image-frame">
+                <div class="project-image-placeholder">
+                  <span class="placeholder-number">{String(idx + 1).padStart(2, '0')}</span>
+                  <span class="placeholder-name">{project.data.title}</span>
+                </div>
+              </div>
+              <div class="project-image-decoration" aria-hidden="true"></div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <div class="projects-fallback">
+    <div class="container">
+      <div class="projects-fallback-grid">
+        {projects.map((project, idx) => (
+          <article class="project-card" data-spotlight>
+            <div class="project-card-visual">
+              <div class="project-image-frame small">
+                <div class="project-image-placeholder">
+                  <span class="placeholder-number">{String(idx + 1).padStart(2, '0')}</span>
+                </div>
+              </div>
+            </div>
+            <div class="project-card-content">
+              <h3 class="project-card-title font-display">{project.data.title}</h3>
+              <p class="project-card-desc">{project.data.description}</p>
+              <div class="project-card-tags">
+                {project.data.tags.map((tag) => (
+                  <span class="project-tag">{tag}</span>
+                ))}
+              </div>
+              <a
+                href={`${baseUrl}/projects/${project.id.split('/')[1]}`}
+                class="project-card-link"
+              >
+                {t.projects.viewProject} →
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects {
+    background: var(--color-bg-secondary);
+    position: relative;
+  }
+
+  /* Horizontal scroll section (desktop) */
+  .projects-pin {
+    display: none;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .projects-track {
+    display: flex;
+    height: 100vh;
+    width: fit-content;
+  }
+
+  .projects-intro {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: var(--gutter);
+    flex-shrink: 0;
+  }
+
+  .projects-title {
+    font-size: var(--text-display-2);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+    max-width: 18ch;
+  }
+
+  .projects-subtitle {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    max-width: 55ch;
+    margin-bottom: var(--space-5);
+  }
+
+  .projects-hint {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+  }
+  .projects-hint svg {
+    width: 2rem;
+    height: 2rem;
+    animation: bounce-x 1.6s ease-in-out infinite;
+  }
+
+  @keyframes bounce-x {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(8px); }
+  }
+
+  .project-slide {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: var(--gutter);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .project-slide-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    align-items: center;
+    width: 100%;
+  }
+
+  .project-slide-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-display);
+    font-size: clamp(20rem, 35vw, 50rem);
+    font-weight: 700;
+    color: var(--color-accent);
+    opacity: 0.04;
+    z-index: 0;
+    pointer-events: none;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+  }
+
+  .project-slide-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .project-slide-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-3);
+  }
+
+  .status-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 6px #4ade80;
+  }
+
+  .project-slide-title {
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-3);
+    letter-spacing: -0.03em;
+  }
+
+  .project-slide-desc {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-5);
+    max-width: 50ch;
+  }
+
+  .project-slide-highlights {
+    margin-bottom: var(--space-5);
+  }
+
+  .highlights-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .project-slide-highlights ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .project-slide-highlights li {
+    display: flex;
+    gap: 1rem;
+    font-size: 1.4rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .highlight-arrow {
+    color: var(--color-accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .project-slide-tags {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-5);
+  }
+
+  .tags-label {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-text-muted);
+    margin-right: 0.6rem;
+  }
+
+  .project-tag {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+  }
+
+  .project-slide-actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .project-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1.2rem 2.4rem;
+    border-radius: var(--radius-full);
+    font-size: 1.3rem;
+    font-weight: 600;
+    transition: all var(--transition-base);
+  }
+
+  .project-btn svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    transition: transform var(--transition-base);
+  }
+
+  .project-btn:hover svg {
+    transform: translateX(4px);
+  }
+
+  .project-btn-primary {
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-glow);
+  }
+  .project-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-lg);
+  }
+
+  .project-btn-ghost {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1.5px solid var(--color-border);
+  }
+  .project-btn-ghost:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .project-slide-visual {
+    position: relative;
+    z-index: 1;
+  }
+
+  .project-image-frame {
+    position: relative;
+    aspect-ratio: 16/10;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .project-image-placeholder {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background:
+      linear-gradient(135deg, rgba(230, 57, 70, 0.15), transparent 60%),
+      var(--color-bg-tertiary);
+  }
+
+  .placeholder-number {
+    font-family: var(--font-display);
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    opacity: 0.4;
+    line-height: 1;
+  }
+
+  .placeholder-name {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--color-text-secondary);
+  }
+
+  .project-image-decoration {
+    position: absolute;
+    bottom: -10%;
+    right: -10%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle, var(--color-accent-glow), transparent 70%);
+    filter: blur(80px);
+    z-index: -1;
+  }
+
+  /* Fallback grid (mobile + non-animated) */
+  .projects-fallback {
+    padding: var(--section-spacing) 0;
+    display: block;
+  }
+
+  .projects-fallback-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .projects-fallback-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .projects-fallback-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .project-card {
+    padding: var(--space-4);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-accent);
+  }
+
+  .project-image-frame.small {
+    aspect-ratio: 16/10;
+  }
+
+  .project-card-title {
+    font-size: var(--text-h3);
+    color: var(--color-text-primary);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .project-card-desc {
+    font-size: 1.4rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .project-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .project-card-link {
+    font-size: 1.3rem;
+    color: var(--color-accent);
+    font-weight: 600;
+    transition: transform var(--transition-base);
+    display: inline-block;
+  }
+  .project-card-link:hover {
+    transform: translateX(4px);
+  }
+
+  /* Show horizontal scroll on desktop only */
+  @media (min-width: 1024px) {
+    .projects-pin {
+      display: block;
+    }
+    .projects-fallback {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  locale="es"
+  title="404 — Página no encontrada"
+  description="La página que buscas no existe."
+>
+  <section class="error-page">
+    <div class="container">
+      <div class="error-content">
+        <span class="error-tag">Error 404</span>
+        <h1 class="error-title font-display">
+          Página<br />
+          <span class="error-accent">no encontrada</span>
+        </h1>
+        <p class="error-desc">La página que buscas no existe o fue movida.</p>
+        <a href="/" class="error-btn magnetic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+          </svg>
+          <span>Volver al inicio</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .error-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: var(--header-height);
+  }
+  .error-content {
+    text-align: center;
+    max-width: 60rem;
+    margin: 0 auto;
+  }
+  .error-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-full);
+  }
+  .error-title {
+    font-size: var(--text-display-2);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin-bottom: var(--space-3);
+  }
+  .error-accent {
+    color: var(--color-accent);
+  }
+  .error-desc {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-5);
+  }
+  .error-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.4rem 2.4rem;
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+    border-radius: var(--radius-full);
+    font-size: 1.4rem;
+    font-weight: 600;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-glow);
+  }
+  .error-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-lg);
+  }
+  .error-btn svg {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+</style>

@@ -1,0 +1,14 @@
+<div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
+<div class="cursor-ring" data-cursor-ring aria-hidden="true"></div>
+
+<style>
+  .cursor-dot, .cursor-ring { position: fixed; top: 0; left: 0; z-index: 10000; pointer-events: none; opacity: 0; transform: translate3d(-100px,-100px,0); will-change: transform, width, height, opacity; }
+  .cursor-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--color-accent); box-shadow: 0 0 14px var(--color-accent-glow); }
+  .cursor-ring { width: 32px; height: 32px; border: 1px solid color-mix(in srgb, var(--color-accent) 70%, transparent); border-radius: 50%; transition: width 280ms var(--ease-out-expo), height 280ms var(--ease-out-expo), background 280ms var(--ease-soft), border-color 280ms var(--ease-soft); }
+  :global(body.cursor-ready) { cursor: none; }
+  :global(body.cursor-ready) a, :global(body.cursor-ready) button, :global(body.cursor-ready) [role='button'] { cursor: none; }
+  :global(body.cursor-hover) .cursor-ring { width: 58px; height: 58px; background: color-mix(in srgb, var(--color-accent) 12%, transparent); border-color: var(--color-accent); backdrop-filter: blur(4px); }
+  :global(body.cursor-view) .cursor-ring { width: 74px; height: 74px; background: var(--color-accent); border-color: var(--color-accent); }
+  :global(body.cursor-view) .cursor-dot::after { content: '↗'; position: absolute; left: 50%; top: 50%; color: var(--color-text-inverse); font: 700 15px/1 var(--font-body); transform: translate(-50%,-50%); }
+  @media (pointer: coarse), (prefers-reduced-motion: reduce) { .cursor-dot, .cursor-ring { display: none; } }
+</style>

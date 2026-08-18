@@ -1,0 +1,214 @@
+---
+import { type Locale, useTranslations } from '../../utils/i18n';
+import SectionLabel from '../ui/SectionLabel.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="intro" id="intro" data-section="intro" data-sticky-section>
+  <div class="intro-sticky" data-sticky-inner>
+    <div class="container intro-container">
+      <div class="intro-text">
+        <SectionLabel label={t.intro.label} number="01" />
+
+        <h2 class="intro-title font-display">
+          <span class="intro-line reveal">{t.intro.title}</span>
+          <span class="intro-line reveal intro-line-accent">{t.intro.titleAccent}</span>
+        </h2>
+
+        <div class="intro-paragraphs">
+          {t.intro.paragraphs.map((p) => (
+            <p class="intro-paragraph reveal">{p}</p>
+          ))}
+        </div>
+      </div>
+
+      <div class="intro-visual">
+        <div class="intro-card mask-reveal">
+          <div class="intro-card-glow" aria-hidden="true"></div>
+          <div class="intro-card-content">
+            <span class="intro-card-label">{locale === 'es' ? 'Disciplina' : 'Discipline'}</span>
+            <h3 class="intro-card-title font-display">{locale === 'es' ? 'Cada pixel cuenta' : 'Every pixel matters'}</h3>
+            <p class="intro-card-text">
+              {locale === 'es'
+                ? 'Construyo interfaces que respetan el tiempo del usuario: rápidas, accesibles y visualmente memorables.'
+                : 'I build interfaces that respect the user\'s time: fast, accessible and visually memorable.'}
+            </p>
+            <div class="intro-card-meta">
+              <div class="meta-item">
+                <span class="meta-value">3+</span>
+                <span class="meta-label">{locale === 'es' ? 'Años' : 'Years'}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-value">10+</span>
+                <span class="meta-label">{locale === 'es' ? 'Proyectos' : 'Projects'}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-value">5+</span>
+                <span class="meta-label">{locale === 'es' ? 'Tecnologías' : 'Techs'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro {
+    position: relative;
+    min-height: 200vh;
+  }
+
+  .intro-sticky {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .intro-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .intro-container {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+
+  .intro-title {
+    font-size: var(--text-display-2);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin-bottom: var(--space-6);
+  }
+
+  .intro-line {
+    display: block;
+  }
+
+  .intro-line-accent {
+    color: var(--color-accent);
+  }
+
+  .intro-paragraphs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .intro-paragraph {
+    font-size: var(--text-body-lg);
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    max-width: 55ch;
+  }
+
+  .intro-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .intro-card {
+    position: relative;
+    width: 100%;
+    max-width: 44rem;
+    aspect-ratio: 4/5;
+    border-radius: var(--radius-2xl);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .intro-card-glow {
+    position: absolute;
+    top: -30%;
+    right: -30%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(circle, var(--color-accent-glow), transparent 70%);
+    filter: blur(60px);
+  }
+
+  .intro-card-content {
+    position: relative;
+    z-index: 1;
+    padding: var(--space-6);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .intro-card-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-full);
+    width: fit-content;
+  }
+
+  .intro-card-title {
+    font-size: var(--text-h1);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--color-text-primary);
+    margin: var(--space-5) 0 var(--space-3);
+    letter-spacing: -0.03em;
+  }
+
+  .intro-card-text {
+    font-size: 1.6rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-5);
+  }
+
+  .intro-card-meta {
+    display: flex;
+    gap: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .meta-value {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .meta-label {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-text-muted);
+    margin-top: 0.6rem;
+  }
+</style>
