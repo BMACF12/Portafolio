@@ -1,0 +1,204 @@
+---
+import type { Locale } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const titleByLocale: Record<Locale, { tab: string; run: string }> = {
+  es: { tab: 'portfolio.ts', run: 'Ejecutar' },
+  en: { tab: 'portfolio.ts', run: 'Run' },
+};
+
+const meta = titleByLocale[locale];
+
+// Tokenize the snippet for syntax-coloured typing.
+// Each entry is one "typing unit": { c: css class, t: visible text }.
+type Token = { c: string; t: string };
+type Line = Token[];
+const snippet: Line[] = [
+  [{ c: 'tk-kw', t: 'const' }, { c: 'tk-pl', t: ' me' }, { c: 'tk-op', t: ':' }, { c: 'tk-t', t: ' Developer' }, { c: 'tk-pl', t: ' =' }, { c: 'tk-br', t: ' {' }],
+  [{ c: 'tk-id', t: '  name' }, { c: 'tk-op', t: ':' }, { c: 'tk-s', t: " 'Brian Flores'" }, { c: 'tk-op', t: ',' }],
+  [{ c: 'tk-id', t: '  role' }, { c: 'tk-op', t: ':' }, { c: 'tk-s', t: " 'Full-Stack Engineer'" }, { c: 'tk-op', t: ',' }],
+  [{ c: 'tk-id', t: '  stack' }, { c: 'tk-op', t: ':' }, { c: 'tk-br', t: ' [' }, { c: 'tk-s', t: "'Angular'" }, { c: 'tk-op', t: ',' }, { c: 'tk-s', t: " 'Flutter'" }, { c: 'tk-op', t: ',' }, { c: 'tk-s', t: " 'TypeScript'" }, { c: 'tk-br', t: ']' }, { c: 'tk-op', t: ',' }],
+  [{ c: 'tk-id', t: '  build' }, { c: 'tk-op', t: ':' }, { c: 'tk-br', t: ' (' }, { c: 'tk-id', t: 'idea' }, { c: 'tk-op', t: ':' }, { c: 'tk-t', t: ' Product' }, { c: 'tk-br', t: ') =>' }, { c: 'tk-t', t: ' Product' }, { c: 'tk-br', t: ' {' }],
+  [{ c: 'tk-id', t: '    return' }, { c: 'tk-id', t: ' idea' }, { c: 'tk-op', t: '.' }, { c: 'tk-id', t: 'ship' }, { c: 'tk-br', t: '()' }, { c: 'tk-op', t: '.' }, { c: 'tk-id', t: 'measure' }, { c: 'tk-br', t: '()' }, { c: 'tk-op', t: '.' }, { c: 'tk-id', t: 'polish' }, { c: 'tk-br', t: '()' }, { c: 'tk-op', t: ';' }],
+  [{ c: 'tk-br', t: '  }' }, { c: 'tk-op', t: ';' }],
+  [{ c: 'tk-br', t: '}' }, { c: 'tk-op', t: ';' }],
+];
+
+const totalTokens = snippet.reduce((sum, line) => sum + line.length, 0);
+
+function escape(value: string) {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Render the source as HTML for set:html. Each token gets a data-token-index
+// so the typing script can reveal them in order.
+let tokenIndex = 0;
+const linesHtml: string[] = snippet.map((line, lineIdx) => {
+  const tokensHtml = line.map((tok) => {
+    const i = tokenIndex++;
+    return `<span class="tk ${tok.c}" data-token-index="${i}">${escape(tok.t)}</span>`;
+  }).join('');
+  return `<span class="code-line" data-line-index="${lineIdx}">${tokensHtml}</span>`;
+});
+
+const sourceHtml = linesHtml.join('\n');
+const gutterHtml = snippet.map((_line, i) => `<span>${String(i + 1).padStart(2, '0')}</span>`).join('');
+---
+
+<div class="code-editor reveal" data-code-editor data-locale={locale} data-code-total={totalTokens}>
+  <div class="code-titlebar">
+    <span class="dot dot-r" aria-hidden="true"></span>
+    <span class="dot dot-y" aria-hidden="true"></span>
+    <span class="dot dot-g" aria-hidden="true"></span>
+    <span class="code-filename" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+      <span>{meta.tab}</span>
+    </span>
+    <span class="code-run">{meta.run}</span>
+  </div>
+
+  <div class="code-body">
+    <div class="code-gutter" aria-hidden="true" set:html={gutterHtml}></div>
+    <pre class="code-source" data-code-source><code data-code-target set:html={sourceHtml}></code><span class="code-cursor" data-code-cursor aria-hidden="true">▍</span></pre>
+  </div>
+</div>
+
+<style>
+  .code-editor {
+    position: relative;
+    width: 100%;
+    max-width: 52rem;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+    font-family: var(--font-mono);
+  }
+  .code-editor::before {
+    content: "";
+    position: absolute;
+    top: -25%;
+    right: -25%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle, var(--color-accent-glow), transparent 70%);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .code-titlebar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 1.4rem;
+    background: var(--color-bg-tertiary);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .dot {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .code-filename {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    flex-grow: 1;
+    justify-content: center;
+  }
+  .code-run {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--color-accent);
+  }
+  .code-body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: 26rem;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-bg-secondary) 100%, transparent), color-mix(in srgb, var(--color-bg-primary) 100%, transparent));
+  }
+  .code-gutter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 1.6rem 1.2rem;
+    color: var(--color-text-muted);
+    background: color-mix(in srgb, var(--color-bg-tertiary) 60%, transparent);
+    border-right: 1px solid var(--color-border);
+    font-size: 1.3rem;
+    text-align: right;
+    user-select: none;
+  }
+  .code-source {
+    position: relative;
+    flex-grow: 1;
+    margin: 0;
+    padding: 1.6rem 1.8rem;
+    font-size: 1.45rem;
+    line-height: 1.7;
+    color: var(--color-text-primary);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .code-source code {
+    display: block;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  .code-line {
+    display: inline;
+  }
+  .tk-kw { color: #c084fc; }
+  .tk-t  { color: #38bdf8; }
+  .tk-s  { color: #86efac; }
+  .tk-id { color: #fcd34d; }
+  .tk-op { color: var(--color-accent); }
+  .tk-pl { color: var(--color-text-primary); }
+  .tk-br { color: var(--color-text-secondary); }
+  .code-cursor {
+    display: inline-block;
+    color: var(--color-accent);
+    margin-left: 0.1rem;
+    transform: translateY(0.1em);
+    animation: caret-blink 1s steps(1) infinite;
+  }
+  .code-editor.is-typing .code-line {
+    visibility: hidden;
+  }
+  .code-editor.is-typing .code-line[data-line-active="true"] {
+    visibility: visible;
+  }
+  .code-editor.is-typing .code-line[data-line-active="true"] .tk {
+    visibility: visible;
+  }
+  .code-editor.is-typing .tk {
+    visibility: hidden;
+  }
+  @keyframes caret-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  @media (max-width: 700px) {
+    .code-source { font-size: 1.25rem; padding: 1.2rem 1.2rem; }
+    .code-body { min-height: 22rem; }
+  }
+</style>

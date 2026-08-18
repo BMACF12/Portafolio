@@ -20,9 +20,17 @@ const projects = (await getCollection('projects', ({ data }) => data.lang === 'e
         <p class="page-subtitle reveal">{t.projects.subtitle}</p>
       </div>
 
+      <div class="filter-bar" data-filter-chip-host></div>
+
       <div class="projects-grid reveal-stagger">
         {projects.map((project, idx) => (
-          <a href={`/en/projects/${project.id.split('/')[1]}`} class="project-card" data-spotlight data-cursor-view>
+          <a
+            href={`/en/projects/${project.id.split('/')[1]}`}
+            class="project-card"
+            data-spotlight
+            data-cursor-view
+            data-tags={project.data.tags.map((t) => t.toLowerCase().replace(/\s+/g, '-')).join('|')}
+          >
             <div class="card-visual">
               <span class="card-number">{String(idx + 1).padStart(2, '0')}</span>
               <span class="card-year">{project.data.year}</span>
@@ -41,9 +49,75 @@ const projects = (await getCollection('projects', ({ data }) => data.lang === 'e
           </a>
         ))}
       </div>
+
+      <div class="filter-empty" data-filter-empty hidden>
+        <span class="empty-icon">⌛</span>
+        <h2 class="empty-title">{t.projects.filter.emptyTitle}</h2>
+        <p class="empty-body">{t.projects.filter.emptyBody}</p>
+      </div>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  import { initProjectFilter } from '../../../scripts/project-filter.client';
+  initProjectFilter({
+    emptyTitle: 'Coming soon',
+    emptyBody: 'No projects use this tech just yet. Check back soon or browse the rest.',
+    clear: 'Clear filter',
+    filteredBy: 'Filtered by',
+  });
+</script>
+
+<style>
+  .projects-page { min-height: 100vh; padding: calc(var(--header-height) + var(--space-8)) 0 var(--space-12); }
+  .page-header { text-align: center; margin-bottom: var(--space-6); }
+  .page-title { font-size: var(--text-display-2); font-weight: 700; letter-spacing: -.04em; }
+  .page-subtitle { font-size: var(--text-body-lg); color: var(--color-text-secondary); max-width: 55ch; margin: 1.5rem auto 0; }
+
+  .filter-bar { display: flex; justify-content: center; gap: .8rem; flex-wrap: wrap; min-height: 4.2rem; margin-bottom: var(--space-6); }
+  :global(.filter-chip) { display: inline-flex; align-items: center; gap: 1rem; padding: .8rem 1rem .8rem 1.6rem; border: 1px solid var(--color-accent); border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-accent) 12%, transparent); color: var(--color-text-primary); font-family: var(--font-mono); font-size: 1.2rem; text-transform: uppercase; letter-spacing: .12em; }
+  :global(.filter-chip strong) { color: var(--color-accent); text-transform: none; letter-spacing: -.01em; font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; }
+  :global(.filter-clear) { width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1px solid var(--color-accent); background: transparent; color: var(--color-accent); font-size: 1.6rem; line-height: 1; cursor: pointer; transition: all 200ms; }
+  :global(.filter-clear:hover) { background: var(--color-accent); color: var(--color-text-inverse); }
+
+  .filter-empty { text-align: center; padding: var(--space-10) 0; color: var(--color-text-secondary); }
+  .filter-empty[hidden] { display: none; }
+  .empty-icon { display: block; font-size: 4.4rem; margin-bottom: var(--space-3); }
+  .empty-title { font-family: var(--font-display); font-size: var(--text-h2); font-weight: 700; color: var(--color-text-primary); margin-bottom: var(--space-2); letter-spacing: -.02em; }
+  .empty-body { font-size: 1.6rem; max-width: 50ch; margin: 0 auto; }
+
+  .projects-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
+  @media (min-width: 768px) { .projects-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1200px) { .projects-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .project-card {
+    display: flex; flex-direction: column;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: transform var(--transition-slow), border-color var(--transition-base), box-shadow var(--transition-slow), opacity var(--transition-base);
+  }
+  .project-card.is-hidden { display: none; }
+  .project-card:hover { transform: translateY(-6px); border-color: var(--color-accent); box-shadow: var(--shadow-md); }
+  .card-visual {
+    position: relative; aspect-ratio: 16/9;
+    background: linear-gradient(135deg, rgba(230,57,70,.12), transparent 60%), var(--color-bg-tertiary);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-number { font-family: var(--font-display); font-size: 9rem; font-weight: 700; color: var(--color-accent); opacity: .25; line-height: 1; }
+  .card-year { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--font-mono); font-size: 1.2rem; color: var(--color-text-muted); }
+  .card-body { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); flex-grow: 1; }
+  .card-status { font-family: var(--font-mono); font-size: 1.1rem; text-transform: uppercase; letter-spacing: .2em; color: #4ade80; }
+  .card-status.status-in-progress { color: #f59e0b; }
+  .card-status.status-archived { color: var(--color-text-muted); }
+  .card-title { font-size: var(--text-h3); font-weight: 700; letter-spacing: -.02em; }
+  .card-desc { font-size: 1.4rem; color: var(--color-text-secondary); line-height: 1.6; flex-grow: 1; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .card-tag { padding: .4rem .9rem; background: var(--color-bg-tertiary); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 1.1rem; color: var(--color-text-secondary); }
+  .card-link { color: var(--color-accent); font-weight: 600; font-size: 1.3rem; }
+</style>
 
 <style>
   .projects-page { min-height: 100vh; padding: calc(var(--header-height) + var(--space-8)) 0 var(--space-12); }

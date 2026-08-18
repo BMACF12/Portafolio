@@ -134,6 +134,12 @@
       "completed": "Completado",
       "in-progress": "En desarrollo",
       "archived": "Archivado"
+    },
+    "filter": {
+      "emptyTitle": "Próximamente",
+      "emptyBody": "Aún no hay proyectos con esta tecnología. Vuelve pronto o explora el resto.",
+      "clear": "Limpiar filtro",
+      "filteredBy": "Filtrando por"
     }
   },
   "philosophy": {

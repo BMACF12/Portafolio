@@ -1,0 +1,17 @@
+<canvas class="generative-bg" data-generative-bg aria-hidden="true"></canvas>
+
+<style>
+  .generative-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: var(--gen-bg-opacity, 0.9);
+    mix-blend-mode: screen;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .generative-bg { display: none; }
+  }
+</style>

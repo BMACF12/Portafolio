@@ -1,11 +1,11 @@
 ---
 import { type Locale, useTranslations } from '../../utils/i18n';
 import SectionLabel from '../ui/SectionLabel.astro';
+import CodeEditor from '../ui/CodeEditor.astro';
 
 interface Props {
   locale: Locale;
 }
-
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 ---
@@ -29,30 +29,19 @@ const t = useTranslations(locale);
       </div>
 
       <div class="intro-visual">
-        <div class="intro-card mask-reveal">
-          <div class="intro-card-glow" aria-hidden="true"></div>
-          <div class="intro-card-content">
-            <span class="intro-card-label">{locale === 'es' ? 'Disciplina' : 'Discipline'}</span>
-            <h3 class="intro-card-title font-display">{locale === 'es' ? 'Cada pixel cuenta' : 'Every pixel matters'}</h3>
-            <p class="intro-card-text">
-              {locale === 'es'
-                ? 'Construyo interfaces que respetan el tiempo del usuario: rápidas, accesibles y visualmente memorables.'
-                : 'I build interfaces that respect the user\'s time: fast, accessible and visually memorable.'}
-            </p>
-            <div class="intro-card-meta">
-              <div class="meta-item">
-                <span class="meta-value">3+</span>
-                <span class="meta-label">{locale === 'es' ? 'Años' : 'Years'}</span>
-              </div>
-              <div class="meta-item">
-                <span class="meta-value">10+</span>
-                <span class="meta-label">{locale === 'es' ? 'Proyectos' : 'Projects'}</span>
-              </div>
-              <div class="meta-item">
-                <span class="meta-value">5+</span>
-                <span class="meta-label">{locale === 'es' ? 'Tecnologías' : 'Techs'}</span>
-              </div>
-            </div>
+        <CodeEditor locale={locale} />
+        <div class="intro-stats">
+          <div class="stat">
+            <span class="stat-value">3+</span>
+            <span class="stat-label">{locale === 'es' ? 'Años' : 'Years'}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">10+</span>
+            <span class="stat-label">{locale === 'es' ? 'Proyectos' : 'Projects'}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">5+</span>
+            <span class="stat-label">{locale === 'es' ? 'Tecnologías' : 'Techs'}</span>
           </div>
         </div>
       </div>
@@ -117,98 +106,44 @@ const t = useTranslations(locale);
 
   .intro-visual {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-  }
-
-  .intro-card {
-    position: relative;
-    width: 100%;
-    max-width: 44rem;
-    aspect-ratio: 4/5;
-    border-radius: var(--radius-2xl);
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-  }
-
-  .intro-card-glow {
-    position: absolute;
-    top: -30%;
-    right: -30%;
-    width: 70%;
-    height: 70%;
-    background: radial-gradient(circle, var(--color-accent-glow), transparent 70%);
-    filter: blur(60px);
-  }
-
-  .intro-card-content {
-    position: relative;
-    z-index: 1;
-    padding: var(--space-6);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .intro-card-label {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--color-accent);
-    padding: 0.4rem 1.2rem;
-    border: 1px solid var(--color-accent);
-    border-radius: var(--radius-full);
-    width: fit-content;
-  }
-
-  .intro-card-title {
-    font-size: var(--text-h1);
-    font-weight: 700;
-    line-height: 1.05;
-    color: var(--color-text-primary);
-    margin: var(--space-5) 0 var(--space-3);
-    letter-spacing: -0.03em;
-  }
-
-  .intro-card-text {
-    font-size: 1.6rem;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin-bottom: var(--space-5);
-  }
-
-  .intro-card-meta {
-    display: flex;
     gap: var(--space-4);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--color-border);
   }
 
-  .meta-item {
+  .intro-stats {
+    display: flex;
+    gap: var(--space-5);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--color-bg-tertiary) 60%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .stat {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    min-width: 5.5rem;
   }
 
-  .meta-value {
+  .stat-value {
     font-family: var(--font-display);
-    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
     font-weight: 700;
     color: var(--color-accent);
     line-height: 1;
     letter-spacing: -0.03em;
   }
 
-  .meta-label {
+  .stat-label {
     font-family: var(--font-mono);
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     text-transform: uppercase;
     letter-spacing: 0.2em;
     color: var(--color-text-muted);
-    margin-top: 0.6rem;
+    margin-top: 0.4rem;
   }
 </style>

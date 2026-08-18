@@ -67,7 +67,7 @@ const edges = [[0,1],[0,3],[1,2],[1,4],[2,5],[3,4],[4,5],[3,7],[4,7],[5,8],[5,9]
       {nodes.map((node, index) => {
         const [x = 0, y = 0] = positions[index] ?? [];
         return (
-          <g class="skill-node" data-skill-node data-node-index={index} data-category={node.categoryIndex} tabindex="0" role="button" aria-label={`${node.name}: ${node.level}%`} transform={`translate(${x} ${y})`}>
+          <g class="skill-node" data-skill-node data-node-index={index} data-category={node.categoryIndex} data-tech={node.name} data-tech-slug={node.name.toLowerCase().replace(/\s+/g, '-')} tabindex="0" role="button" aria-label={`${node.name}: ${node.level}%`} transform={`translate(${x} ${y})`}>
             <circle class="node-pulse" r="27" />
             <circle class="node-circle" r="17" />
             <circle class="node-core" r="5" />
@@ -97,7 +97,10 @@ const edges = [[0,1],[0,3],[1,2],[1,4],[2,5],[3,4],[4,5],[3,7],[4,7],[5,8],[5,9]
   .constellation-svg { display: block; width: 100%; min-height: 34rem; margin: 1rem 0; overflow: visible; }
   .constellation-edges line { stroke: url(#edge-gradient); stroke-width: 1.5; stroke-dasharray: 5 8; opacity: .5; vector-effect: non-scaling-stroke; }
   .constellation-edges line.is-related { stroke: var(--color-accent-hover); stroke-width: 3; opacity: 1; filter: url(#node-glow); }
-  .skill-node { cursor: pointer; outline: none; transform-box: fill-box; transform-origin: center; transition: filter 250ms ease; }
+  .skill-node { cursor: grab; outline: none; transform-box: fill-box; transform-origin: center; transition: filter 250ms ease; }
+  .skill-node:active { cursor: grabbing; }
+  .skill-node.is-dragging { filter: url(#node-glow) drop-shadow(0 0 18px var(--color-accent)); }
+  .constellation-edges.is-dragging line { opacity: 0.9; }
   .skill-node .node-pulse { fill: var(--color-accent); opacity: 0; }
   .skill-node .node-circle { fill: var(--color-bg-tertiary); stroke: var(--color-accent); stroke-width: 1.5; }
   .skill-node .node-core { fill: var(--color-accent); }

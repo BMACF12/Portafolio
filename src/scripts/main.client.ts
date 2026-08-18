@@ -8,6 +8,8 @@ import { initSectionEffects, initSpotlights, updateActiveSectionUI } from './sec
 import { initLetterboxTransitions } from './letterbox-transition.client';
 import { initConstellation } from './constellation.client';
 import { initBackgroundMotion } from './background.client';
+import { initGenerativeBackground } from './generative-bg.client';
+import { initCodeEditor } from './code-typing.client';
 
 declare global {
   interface Window {
@@ -34,7 +36,9 @@ function initPage() {
   initSectionEffects();
   initSpotlights();
   initBackgroundMotion();
+  initGenerativeBackground();
   initLetterboxTransitions();
+  initCodeEditor();
 
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill(true));
 

@@ -1,4 +1,8 @@
+---
+import GenerativeBackground from './GenerativeBackground.astro';
+---
 <div class="global-atmosphere" aria-hidden="true">
+  <GenerativeBackground />
   <div class="global-grid"></div>
   <div class="global-aurora" data-aurora></div>
   <div class="global-orb global-orb-1"></div>
@@ -24,7 +28,7 @@
   }
   .global-grid {
     z-index: 0;
-    opacity: var(--grid-opacity, 0.05);
+    opacity: calc(var(--grid-opacity, 0.05) * 0.6);
     background-image:
       linear-gradient(var(--grid-color, rgba(230, 57, 70, 0.9)) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-color, rgba(230, 57, 70, 0.9)) 1px, transparent 1px);
@@ -46,7 +50,7 @@
     border-radius: 50%;
     background: radial-gradient(circle, var(--aurora-color, rgba(230, 57, 70, 0.16)), transparent 68%);
     filter: blur(55px);
-    opacity: calc(var(--aurora-opacity, 0.8) * var(--bg-pulse, 1));
+    opacity: calc(var(--aurora-opacity, 0.5) * var(--bg-pulse, 1));
     transform: translate3d(-50%, calc(-50% + var(--aurora-drift, 0px)), 0) scale(calc(0.95 + var(--bg-pulse, 1) * 0.05));
     transition: opacity 600ms var(--ease-soft), background 700ms var(--ease-soft);
     will-change: left, top, transform, opacity;
