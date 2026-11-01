@@ -19,6 +19,7 @@ let lenisInstance: Lenis | null = null;
  */
 export function initGsapAnimations() {
   if (prefersReducedMotion()) {
+    document.documentElement.classList.remove('lenis');
     document.querySelectorAll<HTMLElement>('.reveal, .reveal-stagger, .mask-reveal').forEach((el) => {
       el.classList.add('is-visible');
     });
@@ -161,6 +162,11 @@ function initSplitText() {
 
     const chars = el.querySelectorAll<HTMLElement>('.char');
     if (!chars.length) return;
+
+    // The GSAP character tween owns this element's entrance. The `.reveal`
+    // class would translate it 60px down first, outside the clipped h1, making
+    // it never intersect and stay invisible on mobile.
+    el.classList.add('is-visible');
 
     gsap.from(chars, {
       yPercent: 120,

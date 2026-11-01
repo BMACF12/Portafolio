@@ -1,8 +1,9 @@
 import Lenis from 'lenis';
 import { prefersReducedMotion } from '../utils/helpers';
+import { isLowTier } from '../utils/performance';
 
 export function initSmoothScroll(): Lenis | null {
-  if (prefersReducedMotion()) {
+  if (prefersReducedMotion() || isLowTier()) {
     document.documentElement.classList.remove('lenis');
     return null;
   }
@@ -17,12 +18,8 @@ export function initSmoothScroll(): Lenis | null {
 
   document.documentElement.classList.add('lenis');
 
-  function raf(time: number) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
-
+  // The rAF loop lives in animations.client.ts (gsap.ticker), so Lenis must not
+  // start a second one here.
   return lenis;
 }
 

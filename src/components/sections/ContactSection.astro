@@ -7,6 +7,28 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+
+const email = 'brianf13@outlook.es';
+const phoneDisplay = '+593 99 546 6923';
+const whatsappHref = `https://wa.me/593995466923?text=${encodeURIComponent(t.contact.whatsappMessage)}`;
+
+const socialLinks = [
+  {
+    name: t.social.linkedin,
+    href: 'https://www.linkedin.com/in/brian-flores-308189322',
+    icon: 'linkedin',
+  },
+  {
+    name: t.social.github,
+    href: 'https://github.com/BMACF12',
+    icon: 'github',
+  },
+  {
+    name: t.social.email,
+    href: `mailto:${email}`,
+    icon: 'email',
+  },
+];
 ---
 
 <section class="contact-section" id="contact" data-section="contact">
@@ -14,135 +36,121 @@ const t = useTranslations(locale);
     <div class="contact-glow"></div>
   </div>
 
-  <div
-    class="container contact-container"
-    data-msg-name-required={t.contact.validation.nameRequired}
-    data-msg-email-required={t.contact.validation.emailRequired}
-    data-msg-email-invalid={t.contact.validation.emailInvalid}
-    data-msg-message-required={t.contact.validation.messageRequired}
-    data-msg-message-min={t.contact.validation.messageMin}
-    data-msg-success={t.contact.success}
-    data-msg-error={t.contact.error}
-  >
-    <div class="contact-info">
-      <div class="contact-info-inner reveal">
-        <span class="contact-tag">{t.contact.label}</span>
-        <h2 class="contact-title font-display">{t.contact.title}</h2>
-        <p class="contact-desc">{t.contact.subtitle}</p>
+  <div class="container contact-container">
+    <header class="contact-header reveal">
+      <span class="contact-tag">{t.contact.label}</span>
+      <h2 class="contact-title font-display">{t.contact.title}</h2>
+      <p class="contact-desc">{t.contact.subtitle}</p>
+    </header>
 
-        <div class="contact-cards">
-          <a href="mailto:brianf13@outlook.es" class="contact-card magnetic">
-            <div class="contact-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-            </div>
-            <div class="contact-card-content">
-              <span class="contact-card-label">{t.contact.info.email}</span>
-              <span class="contact-card-value">brianf13@outlook.es</span>
-            </div>
-          </a>
+    <div class="contact-stage reveal-stagger">
+      <a
+        class="contact-primary magnetic"
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${t.contact.info.whatsapp}: ${phoneDisplay}`}
+      >
+        <span class="contact-primary-top">
+          <span class="contact-primary-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"></path>
+            </svg>
+          </span>
+          <span class="contact-primary-label">{t.contact.info.whatsapp}</span>
+        </span>
 
-          <div class="contact-card">
-            <div class="contact-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-            </div>
-            <div class="contact-card-content">
-              <span class="contact-card-label">{t.contact.info.location}</span>
-              <span class="contact-card-value">{t.contact.info.locationValue}</span>
-            </div>
-          </div>
+        <span class="contact-primary-bottom">
+          <span class="contact-primary-value font-display">{phoneDisplay}</span>
+          <span class="contact-primary-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M13 5l7 7-7 7"></path>
+            </svg>
+          </span>
+        </span>
+      </a>
 
-          <div class="contact-card">
-            <div class="contact-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12,6 12,12 16,14"></polyline>
-              </svg>
-            </div>
-            <div class="contact-card-content">
-              <span class="contact-card-label">{t.contact.info.availability}</span>
-              <span class="contact-card-value">
-                <span class="status-pill">
-                  <span class="status-dot"></span>
-                  {locale === 'es' ? 'Abierto a oportunidades' : 'Open to opportunities'}
-                </span>
+      <div class="contact-cards">
+        <a class="contact-card magnetic" href={`mailto:${email}`}>
+          <span class="contact-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </span>
+          <span class="contact-card-content">
+            <span class="contact-card-label">{t.contact.info.email}</span>
+            <span class="contact-card-value">{email}</span>
+          </span>
+        </a>
+
+        <div class="contact-card magnetic">
+          <span class="contact-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </span>
+          <span class="contact-card-content">
+            <span class="contact-card-label">{t.contact.info.location}</span>
+            <span class="contact-card-value">{t.contact.info.locationValue}</span>
+          </span>
+        </div>
+
+        <div class="contact-card magnetic">
+          <span class="contact-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12,6 12,12 16,14"></polyline>
+            </svg>
+          </span>
+          <span class="contact-card-content">
+            <span class="contact-card-label">{t.contact.info.availability}</span>
+            <span class="contact-card-value">
+              <span class="status-pill">
+                <span class="status-dot"></span>
+                {t.contact.info.availabilityValue}
               </span>
-            </div>
-          </div>
+            </span>
+          </span>
         </div>
       </div>
     </div>
 
-    <form class="contact-form reveal" id="contact-form" novalidate data-form-mount>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="name">{t.contact.name} *</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            autocomplete="name"
-            placeholder="John Doe"
-          />
-          <span class="form-error" data-error="name"></span>
-        </div>
-        <div class="form-group">
-          <label for="email">{t.contact.email} *</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            autocomplete="email"
-            placeholder="john@example.com"
-          />
-          <span class="form-error" data-error="email"></span>
-        </div>
+    <div class="contact-social-row reveal">
+      <span class="contact-social-label">{t.contact.socialLabel}</span>
+
+      <div class="contact-social">
+        {socialLinks.map((link) => (
+          <a
+            href={link.href}
+            class="social-link magnetic"
+            target={link.href.startsWith('http') ? '_blank' : undefined}
+            rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            aria-label={link.name}
+          >
+            {link.icon === 'linkedin' && (
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
+              </svg>
+            )}
+            {link.icon === 'github' && (
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-5.37-5.37-12-12-12z"></path>
+              </svg>
+            )}
+            {link.icon === 'email' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            )}
+          </a>
+        ))}
       </div>
-
-      <div class="form-group">
-        <label for="subject">{t.contact.subject}</label>
-        <input type="text" id="subject" name="subject" placeholder="..." />
-      </div>
-
-      <div class="form-group">
-        <label for="message">{t.contact.message} *</label>
-        <textarea
-          id="message"
-          name="message"
-          required
-          rows="6"
-          placeholder="..."
-        ></textarea>
-        <span class="form-error" data-error="message"></span>
-      </div>
-
-      <input type="text" name="bot-field" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
-
-      <button type="submit" class="form-submit magnetic">
-        <span class="submit-text">{t.contact.send}</span>
-        <span class="submit-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
-          </svg>
-        </span>
-        <span class="submit-loader" aria-hidden="true"></span>
-      </button>
-
-      <div class="form-status" role="status" aria-live="polite"></div>
-    </form>
+    </div>
   </div>
 </section>
-
-<script>
-  import '../../scripts/contact-form.client.ts';
-</script>
 
 <style>
   .contact-section {
@@ -155,6 +163,12 @@ const t = useTranslations(locale);
     position: absolute;
     inset: 0;
     z-index: -1;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 45%,
+      color-mix(in srgb, var(--color-bg-secondary) 92%, transparent) 100%
+    );
   }
 
   .contact-glow {
@@ -169,15 +183,15 @@ const t = useTranslations(locale);
   }
 
   .contact-container {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: var(--space-6);
   }
 
-  @media (min-width: 1024px) {
-    .contact-container {
-      grid-template-columns: 1fr 1.2fr;
-    }
+  .contact-header {
+    max-width: 72rem;
+    margin: 0 auto;
+    text-align: center;
   }
 
   .contact-tag {
@@ -206,12 +220,131 @@ const t = useTranslations(locale);
     font-size: var(--text-body-lg);
     color: var(--color-text-secondary);
     line-height: 1.6;
-    margin-bottom: var(--space-5);
+    max-width: 58ch;
+    margin: 0 auto;
+  }
+
+  .contact-stage {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    max-width: 112rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1024px) {
+    .contact-stage {
+      grid-template-columns: 1.15fr 1fr;
+      gap: var(--space-4);
+    }
+  }
+
+  .contact-primary {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-5);
+    min-height: 28rem;
+    padding: var(--space-5);
+    border-radius: var(--radius-2xl);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dim) 100%);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-glow);
+    overflow: hidden;
+    transition: box-shadow var(--transition-base), filter var(--transition-base);
+  }
+
+  .contact-primary::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 60%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.22), transparent 65%);
+    pointer-events: none;
+  }
+
+  .contact-primary:hover {
+    box-shadow: var(--shadow-glow-lg);
+    filter: brightness(1.06);
+  }
+
+  .contact-primary-top {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .contact-primary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5.2rem;
+    height: 5.2rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(6px);
+    flex-shrink: 0;
+  }
+
+  .contact-primary-icon svg {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  .contact-primary-label {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .contact-primary-bottom {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .contact-primary-value {
+    font-size: clamp(2.2rem, 3.4vw, 3.4rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    word-break: break-word;
+  }
+
+  .contact-primary-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5.6rem;
+    height: 5.6rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    flex-shrink: 0;
+    transition: transform var(--transition-base), background var(--transition-base);
+  }
+
+  .contact-primary-arrow svg {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .contact-primary:hover .contact-primary-arrow {
+    transform: translate(4px, -4px);
+    background: rgba(255, 255, 255, 0.24);
   }
 
   .contact-cards {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: var(--space-2);
   }
 
@@ -219,16 +352,16 @@ const t = useTranslations(locale);
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-3);
+    padding: var(--space-3) var(--space-4);
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    transition: all var(--transition-base);
+    transition: border-color var(--transition-base), background var(--transition-base);
   }
 
-  a.contact-card:hover {
+  .contact-card:hover {
     border-color: var(--color-accent);
-    transform: translateX(4px);
+    background: var(--color-bg-tertiary);
   }
 
   .contact-card-icon {
@@ -243,6 +376,10 @@ const t = useTranslations(locale);
     flex-shrink: 0;
   }
 
+  .contact-card:hover .contact-card-icon {
+    background: var(--color-bg-elevated);
+  }
+
   .contact-card-icon svg {
     width: 2.2rem;
     height: 2.2rem;
@@ -252,6 +389,7 @@ const t = useTranslations(locale);
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+    min-width: 0;
   }
 
   .contact-card-label {
@@ -281,162 +419,62 @@ const t = useTranslations(locale);
     border-radius: 50%;
     background: #4ade80;
     box-shadow: 0 0 8px #4ade80;
-    animation: pulse 2s ease-in-out infinite;
+    animation: contact-pulse 2s ease-in-out infinite;
   }
 
-  /* Form */
-  .contact-form {
-    background: var(--color-bg-secondary);
-    padding: var(--space-5);
-    border-radius: var(--radius-xl);
-    border: 1px solid var(--color-border);
+  @keyframes contact-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.8); }
+  }
+
+  .contact-social-row {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: var(--space-3);
+    flex-wrap: wrap;
+    max-width: 112rem;
+    width: 100%;
+    margin: 0 auto;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
   }
 
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-3);
-  }
-
-  @media (min-width: 640px) {
-    .form-row {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-
-  .form-group label {
+  .contact-social-label {
     font-family: var(--font-mono);
     font-size: 1.2rem;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--color-text-secondary);
+    letter-spacing: 0.25em;
+    color: var(--color-text-muted);
   }
 
-  .form-group input,
-  .form-group textarea {
-    width: 100%;
-    padding: 1.4rem 1.6rem;
-    background: var(--color-bg-tertiary);
-    border: 1.5px solid var(--color-border);
-    border-radius: var(--radius-md);
-    color: var(--color-text-primary);
-    font-family: var(--font-body);
-    font-size: 1.4rem;
-    transition: all var(--transition-base);
+  .contact-social {
+    display: flex;
+    gap: 1rem;
   }
 
-  .form-group input:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    background: var(--color-bg-elevated);
-  }
-
-  .form-group textarea {
-    resize: vertical;
-    min-height: 12rem;
-    line-height: 1.5;
-  }
-
-  .form-error {
-    font-size: 1.2rem;
-    color: #ff6b6b;
-    min-height: 1.6rem;
-  }
-
-  .honeypot {
-    position: absolute;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-  }
-
-  .form-submit {
+  .social-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    padding: 1.4rem 2.4rem;
-    background: var(--color-accent);
-    color: var(--color-text-inverse);
+    width: 4.4rem;
+    height: 4.4rem;
     border-radius: var(--radius-full);
-    font-size: 1.4rem;
-    font-weight: 600;
-    cursor: pointer;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
     transition: all var(--transition-base);
-    box-shadow: var(--shadow-glow);
-    margin-top: var(--space-2);
   }
 
-  .form-submit:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-glow-lg);
-  }
-
-  .form-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .submit-icon svg {
+  .social-link svg {
     width: 1.8rem;
     height: 1.8rem;
-    transition: transform var(--transition-base);
   }
 
-  .form-submit:hover .submit-icon svg {
-    transform: translate(2px, -2px);
-  }
-
-  .submit-loader {
-    display: none;
-    width: 1.8rem;
-    height: 1.8rem;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top-color: currentColor;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  .form-submit.loading .submit-text,
-  .form-submit.loading .submit-icon {
-    display: none;
-  }
-  .form-submit.loading .submit-loader {
-    display: block;
-  }
-
-  .form-status {
-    padding: 1rem;
-    border-radius: var(--radius-md);
-    text-align: center;
-    font-size: 1.3rem;
-    min-height: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .form-status.success {
-    background: rgba(74, 222, 128, 0.1);
-    color: #4ade80;
-  }
-  .form-status.error {
-    background: rgba(255, 107, 107, 0.1);
-    color: #ff6b6b;
+  .social-link:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    background: var(--color-bg-elevated);
+    transform: translateY(-3px);
   }
 </style>

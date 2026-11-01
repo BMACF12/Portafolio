@@ -1,9 +1,10 @@
 import { prefersReducedMotion } from '../utils/helpers';
+import { getPerformanceTier } from '../utils/performance';
 
 /**
  * Singleton cursor system that survives Astro ClientRouter page swaps.
- * Element references are re-queried on every navigation; listeners and the
- * RAF loop are bound exactly once on `window`.
+ * Element references are re-queried on every navigation; listeners are bound
+ * exactly once on `window`. The RAF loop stops itself when the cursor settles.
  */
 
 interface CursorElements {
@@ -30,27 +31,56 @@ function refreshElements() {
   };
 }
 
+function paint() {
+  if (els.dot) els.dot.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+  if (els.ring) els.ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+  if (els.aurora) {
+    els.aurora.style.setProperty('--aurora-x', `${currentX}px`);
+    els.aurora.style.setProperty('--aurora-y', `${currentY}px`);
+  }
+}
+
 function render() {
+  rafId = 0;
+
   currentX += (targetX - currentX) * 0.22;
   currentY += (targetY - currentY) * 0.22;
   ringX += (targetX - ringX) * 0.11;
   ringY += (targetY - ringY) * 0.11;
 
-  if (els.dot) els.dot.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
-  if (els.ring) els.ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
-  if (els.aurora) {
-    els.aurora.style.left = `${currentX}px`;
-    els.aurora.style.top = `${currentY}px`;
+  paint();
+
+  const settled =
+    Math.abs(targetX - currentX) < 0.4 &&
+    Math.abs(targetY - currentY) < 0.4 &&
+    Math.abs(targetX - ringX) < 0.4 &&
+    Math.abs(targetY - ringY) < 0.4;
+
+  if (!settled) {
+    rafId = requestAnimationFrame(render);
+  } else {
+    currentX = ringX = targetX;
+    currentY = ringY = targetY;
+    paint();
   }
-  rafId = requestAnimationFrame(render);
 }
 
 function onMove(event: PointerEvent) {
   targetX = event.clientX;
   targetY = event.clientY;
+
   if (els.dot) els.dot.style.opacity = '1';
   if (els.ring) els.ring.style.opacity = '1';
   if (els.aurora) els.aurora.style.opacity = '0.8';
+
+  if (getPerformanceTier() === 'low') {
+    currentX = ringX = targetX;
+    currentY = ringY = targetY;
+    paint();
+    return;
+  }
+
+  if (!rafId) rafId = requestAnimationFrame(render);
 }
 
 function onLeaveDocument() {
@@ -77,7 +107,13 @@ function onPointerOut(event: PointerEvent) {
 }
 
 export function initCursorSystem() {
-  if (prefersReducedMotion() || !window.matchMedia('(pointer: fine)').matches) return;
+  if (
+    prefersReducedMotion() ||
+    getPerformanceTier() === 'low' ||
+    !window.matchMedia('(pointer: fine)').matches
+  ) {
+    return;
+  }
 
   refreshElements();
 
@@ -97,7 +133,14 @@ export function initCursorSystem() {
   document.addEventListener('pointerover', onPointerOver, { passive: true });
   document.addEventListener('pointerout', onPointerOut, { passive: true });
   document.documentElement.addEventListener('mouseleave', onLeaveDocument);
-  window.addEventListener('pagehide', () => cancelAnimationFrame(rafId), { once: true });
-
-  rafId = requestAnimationFrame(render);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  });
+  window.addEventListener('pagehide', () => {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+  });
 }

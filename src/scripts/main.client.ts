@@ -3,13 +3,7 @@ import { destroySmoothScroll } from './lenis.client';
 import { initTheme, toggleTheme } from './theme.client';
 import { initGsapAnimations, ScrollTrigger } from './animations.client';
 import { initTypingEffect } from './typing.client';
-import { initCursorSystem } from './cursor-system.client';
 import { initSectionEffects, initSpotlights, updateActiveSectionUI } from './section-effects.client';
-import { initLetterboxTransitions } from './letterbox-transition.client';
-import { initConstellation } from './constellation.client';
-import { initBackgroundMotion } from './background.client';
-import { initGenerativeBackground } from './generative-bg.client';
-import { initCodeEditor } from './code-typing.client';
 
 declare global {
   interface Window {
@@ -18,35 +12,104 @@ declare global {
   }
 }
 
+type DeferredModules = {
+  cursor: typeof import('./cursor-system.client');
+  letterbox: typeof import('./letterbox-transition.client');
+  constellation: typeof import('./constellation.client');
+  background: typeof import('./background.client');
+  generative: typeof import('./generative-bg.client');
+  code: typeof import('./code-typing.client');
+};
+
 let uiBound = false;
+let navbarEl: HTMLElement | null = null;
+let scrollRaf = 0;
+let pageToken = 0;
+let deferredModules: Promise<DeferredModules> | null = null;
+
+function onScroll() {
+  if (scrollRaf) return;
+  scrollRaf = requestAnimationFrame(() => {
+    scrollRaf = 0;
+    navbarEl?.classList.toggle('scrolled', window.scrollY > 120);
+    updateActiveSectionUI();
+  });
+}
+
+function loadDeferredModules(): Promise<DeferredModules> {
+  if (!deferredModules) {
+    deferredModules = Promise.all([
+      import('./cursor-system.client'),
+      import('./letterbox-transition.client'),
+      import('./constellation.client'),
+      import('./background.client'),
+      import('./generative-bg.client'),
+      import('./code-typing.client'),
+    ]).then(([cursor, letterbox, constellation, background, generative, code]) => ({
+      cursor,
+      letterbox,
+      constellation,
+      background,
+      generative,
+      code,
+    }));
+  }
+  return deferredModules;
+}
+
+async function initDeferredModules() {
+  const modules = await loadDeferredModules();
+
+  modules.cursor.initCursorSystem();
+  modules.letterbox.initLetterboxTransitions();
+  modules.background.initBackgroundMotion();
+  modules.generative.initGenerativeBackground();
+  modules.constellation.initConstellation();
+  modules.code.initCodeEditor();
+}
+
+function scheduleDeferredInit(token: number) {
+  const run = () => {
+    if (token !== pageToken) return;
+    initDeferredModules().catch(() => {});
+  };
+
+  const idleWindow = window as Window & {
+    requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+  };
+
+  if (idleWindow.requestIdleCallback) {
+    idleWindow.requestIdleCallback(run, { timeout: 1200 });
+  } else {
+    window.setTimeout(run, 300);
+  }
+}
 
 /**
  * Single source of truth for page init.
  *
  * astro:page-load fires on the initial load AND on every client-side navigation,
- * so no DOMContentLoaded fallback is needed (a fallback used to cause a double-init
- * that left orphaned ScrollTrigger pin-spacers pushing the hero content down).
- *
- * Init order: GSAP first (it kills stale triggers and is the only thing that does),
- * then systems that own their own ScrollTriggers (constellation, typing).
+ * so no DOMContentLoaded fallback is needed. Critical systems start immediately;
+ * decorative systems are imported after the page is idle.
  */
 function initPage() {
+  const token = ++pageToken;
+
+  navbarEl = document.querySelector<HTMLElement>('[data-navbar]');
+  document.body.classList.remove('no-scroll');
+
   initTheme();
-  initCursorSystem();
   initSectionEffects();
   initSpotlights();
-  initLetterboxTransitions();
-  initCodeEditor();
 
   // Kill stale ScrollTriggers BEFORE rebuilding anything, so the background
   // tweens we create below survive the next ClientRouter navigation.
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill(true));
 
-  initBackgroundMotion();
-  initGenerativeBackground();
   initGsapAnimations();
-  initConstellation();
   initTypingEffect();
+  onScroll();
+  scheduleDeferredInit(token);
 }
 
 document.addEventListener('astro:page-load', () => {
@@ -100,20 +163,7 @@ if (!uiBound) {
     }
   });
 
-  // Navbar scrolled-state + scroll-driven UI: rAF-throttled, re-reads elements.
-  let rafPending = false;
-  const onScroll = () => {
-    if (rafPending) return;
-    rafPending = true;
-    requestAnimationFrame(() => {
-      rafPending = false;
-      const navbar = document.querySelector<HTMLElement>('[data-navbar]');
-      navbar?.classList.toggle('scrolled', window.scrollY > 60);
-      updateActiveSectionUI();
-    });
-  };
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
 
   // Smooth-scroll for in-page hash links (re-binding would be wasteful).
   document.addEventListener('click', (event) => {

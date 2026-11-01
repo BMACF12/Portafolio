@@ -45,15 +45,15 @@ import GenerativeBackground from './GenerativeBackground.astro';
     width: 42rem;
     height: 42rem;
     inset: auto;
-    left: var(--aurora-x, 50vw);
-    top: var(--aurora-y, 35vh);
+    left: 0;
+    top: 0;
     border-radius: 50%;
     background: radial-gradient(circle, var(--aurora-color, rgba(230, 57, 70, 0.16)), transparent 68%);
     filter: blur(55px);
     opacity: calc(var(--aurora-opacity, 0.5) * var(--bg-pulse, 1));
-    transform: translate3d(-50%, calc(-50% + var(--aurora-drift, 0px)), 0) scale(calc(0.95 + var(--bg-pulse, 1) * 0.05));
+    transform: translate3d(var(--aurora-x, 50vw), var(--aurora-y, 35vh), 0) translate(-50%, calc(-50% + var(--aurora-drift, 0px))) scale(calc(0.95 + var(--bg-pulse, 1) * 0.05));
     transition: opacity 600ms var(--ease-soft), background 700ms var(--ease-soft);
-    will-change: left, top, transform, opacity;
+    will-change: transform, opacity;
   }
   .global-orb {
     border-radius: 50%;
@@ -96,8 +96,13 @@ import GenerativeBackground from './GenerativeBackground.astro';
     .global-aurora { width: 26rem; height: 26rem; filter: blur(45px); }
     .global-orb-1, .global-orb-2 { width: 18rem; height: 18rem; opacity: 0.22; }
   }
+  :global(html[data-perf-tier="low"]) .global-grid,
+  :global(html[data-perf-tier="low"]) .global-noise,
+  :global(html[data-perf-tier="low"]) .global-orb {
+    display: none;
+  }
   @media (prefers-reduced-motion: reduce) {
-    .global-aurora { left: 50vw; top: 30vh; transition: none; --bg-zoom: 1; --bg-pulse: 1; }
+    .global-aurora { --aurora-x: 50vw; --aurora-y: 30vh; transition: none; --bg-zoom: 1; --bg-pulse: 1; }
     .global-orb { display: none; }
   }
 </style>

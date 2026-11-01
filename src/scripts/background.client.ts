@@ -24,11 +24,17 @@ const ACCENT_DEFAULTS: Record<string, string> = {
   contact: 'rgba(230, 57, 70, 0.16)',
 };
 
+let scrollTween: ReturnType<typeof gsap.to> | null = null;
+let pulseTween: ReturnType<typeof gsap.to> | null = null;
+
 export function initBackgroundMotion() {
   const atmosphere = document.querySelector<HTMLElement>('.global-atmosphere');
   const grid = document.querySelector<HTMLElement>('.global-grid');
   const aurora = document.querySelector<HTMLElement>('.global-aurora');
   if (!atmosphere || !grid || !aurora) return;
+
+  scrollTween?.kill();
+  pulseTween?.kill();
 
   const reduced = prefersReducedMotion();
   const root = document.documentElement;
@@ -40,8 +46,12 @@ export function initBackgroundMotion() {
     return;
   }
 
+  root.style.setProperty('--bg-zoom', '1');
+  root.style.setProperty('--bg-drift', '0px');
+  root.style.setProperty('--bg-pulse', '0.8');
+
   // 1) Cinematic zoom + drift tied to page scroll progress.
-  gsap.to(root, {
+  scrollTween = gsap.to(root, {
     '--bg-zoom': 1.14,
     '--bg-drift': '-120px',
     ease: 'none',
@@ -54,7 +64,7 @@ export function initBackgroundMotion() {
   });
 
   // 2) Aurora breathing pulse (independent of scroll, slow loop).
-  gsap.to(root, {
+  pulseTween = gsap.to(root, {
     '--bg-pulse': 1,
     duration: 4.5,
     yoyo: true,

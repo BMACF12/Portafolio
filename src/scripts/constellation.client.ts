@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { prefersReducedMotion } from '../utils/helpers';
+import { frameIntervalForTier } from '../utils/performance';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,6 +42,32 @@ let edgesLayer: SVGGElement | null = null;
 let revealed = false;
 let tickerId: number | null = null;
 let activeIndex = -1;
+let sectionVisible = true;
+let visibilityObserver: IntersectionObserver | null = null;
+let visibilityBound = false;
+let lastFrame = 0;
+const frameInterval = frameIntervalForTier();
+
+function stopTicker() {
+  if (tickerId !== null) {
+    cancelAnimationFrame(tickerId);
+    tickerId = null;
+  }
+}
+
+function startTicker() {
+  if (
+    tickerId !== null ||
+    !revealed ||
+    !sectionVisible ||
+    document.hidden ||
+    prefersReducedMotion()
+  ) {
+    return;
+  }
+  lastFrame = 0;
+  tickerId = requestAnimationFrame(step);
+}
 
 function getSvgPoint(clientX: number, clientY: number) {
   if (!svg) return { x: 0, y: 0 };
@@ -85,8 +112,19 @@ function navigateToSkill(slug: string, name: string) {
 }
 
 function step(time: number) {
-  tickerId = requestAnimationFrame(step);
-  if (!nodes.length) return;
+  tickerId = null;
+  if (!revealed || !sectionVisible || document.hidden) return;
+
+  if (frameInterval && lastFrame && time - lastFrame < frameInterval) {
+    tickerId = requestAnimationFrame(step);
+    return;
+  }
+  lastFrame = time;
+
+  if (!nodes.length) {
+    tickerId = requestAnimationFrame(step);
+    return;
+  }
   const t = time / 1000;
 
   // Float targets + spring forces
@@ -143,6 +181,7 @@ function step(time: number) {
   }
 
   refreshAllEdges();
+  tickerId = requestAnimationFrame(step);
 }
 
 function bindNodeInteractions(node: Node) {
@@ -280,7 +319,7 @@ function reveal() {
   timeline.add(() => {
     root?.classList.add('is-visible');
     nodes.forEach(bindNodeInteractions);
-    if (tickerId === null) tickerId = requestAnimationFrame(step);
+    startTicker();
   });
 }
 
@@ -292,14 +331,14 @@ export function initConstellation() {
   // would otherwise keep running against detached nodes. Cancel it and
   // reset module-level flags so reveal() runs against the new DOM.
   if (root !== newRoot) {
-    if (tickerId !== null) {
-      cancelAnimationFrame(tickerId);
-      tickerId = null;
-    }
+    stopTicker();
+    visibilityObserver?.disconnect();
+    visibilityObserver = null;
     nodes = [];
     edges = [];
     revealed = false;
     activeIndex = -1;
+    sectionVisible = true;
   }
 
   if (newRoot.dataset.ready === 'true') return;
@@ -348,6 +387,24 @@ export function initConstellation() {
       scale: 0.4,
       transformOrigin: 'center center',
       transformBox: 'fill-box',
+    });
+  }
+
+  visibilityObserver = new IntersectionObserver(
+    (entries) => {
+      sectionVisible = entries[0]?.isIntersecting ?? true;
+      if (sectionVisible) startTicker();
+      else stopTicker();
+    },
+    { rootMargin: '200px 0px' }
+  );
+  visibilityObserver.observe(root);
+
+  if (!visibilityBound) {
+    visibilityBound = true;
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopTicker();
+      else startTicker();
     });
   }
 

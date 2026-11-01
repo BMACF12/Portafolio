@@ -1,7 +1,7 @@
 // Brian Flores Portfolio — Service Worker
 // Strategy: network-first for HTML/navigation, cache-first for static assets.
 
-const VERSION = 'bf-portfolio-v1';
+const VERSION = 'bf-portfolio-v2';
 const STATIC_CACHE = `${VERSION}-static`;
 const PAGE_CACHE = `${VERSION}-pages`;
 
@@ -11,6 +11,9 @@ const PRECACHE = [
   '/og-image.jpg',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
+  '/fonts/inter-latin-var.woff2',
+  '/fonts/space-grotesk-latin-var.woff2',
+  '/fonts/jetbrains-mono-latin-var.woff2',
 ];
 
 const STATIC_PATTERN = /\.(?:js|css|png|jpg|jpeg|webp|avif|svg|woff2?|mp4|webm|json)$/i;

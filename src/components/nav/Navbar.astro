@@ -102,8 +102,32 @@ const navLinks = [
     align-items: center;
     justify-content: space-between;
     padding: 2rem var(--gutter);
-    transition: all var(--transition-base);
+    border-bottom: 1px solid transparent;
+    transition:
+      padding var(--transition-base),
+      border-color var(--transition-base);
     pointer-events: none;
+  }
+
+  .navbar::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: -1;
+    height: calc(100% + 5rem);
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-bg-primary) 94%, transparent) 0%,
+      color-mix(in srgb, var(--color-bg-primary) 78%, transparent) 45%,
+      transparent 100%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base);
+  }
+
+  .navbar.scrolled::before {
+    opacity: 1;
   }
 
   .navbar > * {
@@ -111,10 +135,7 @@ const navLinks = [
   }
 
   .navbar.scrolled {
-    background: color-mix(in srgb, var(--color-bg-primary) 85%, transparent);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--color-border);
+    border-bottom-color: var(--color-border);
     padding: 1.4rem var(--gutter);
   }
 

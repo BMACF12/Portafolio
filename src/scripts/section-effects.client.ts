@@ -2,28 +2,52 @@ import { prefersReducedMotion } from '../utils/helpers';
 
 /**
  * Section effects (dots, counter, active-section tints).
- * Safe to call on every page navigation: the window scroll listener is bound
- * once and re-reads fresh element references each frame of use.
+ * Safe to call on every page navigation: element references are refreshed on
+ * init and the scroll path only reads cached values.
  */
 
 let scrollBound = false;
+let sectionObserver: IntersectionObserver | null = null;
+let resizeObserver: ResizeObserver | null = null;
+let measureRaf = 0;
+let maxScroll = 0;
+
+let percentEl: HTMLElement | null = null;
+let counterEl: HTMLButtonElement | null = null;
+let indicatorEl: HTMLElement | null = null;
+
+function measureScrollRange() {
+  maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+}
+
+function scheduleMeasure() {
+  if (measureRaf) return;
+  measureRaf = requestAnimationFrame(() => {
+    measureRaf = 0;
+    measureScrollRange();
+    updateActiveSectionUI();
+  });
+}
 
 /**
- * Re-queries UI elements each call — safe to invoke from a delegated scroll handler.
+ * Reads cached element refs — safe to invoke from a delegated scroll handler.
  */
 export function updateActiveSectionUI() {
-  const percentEl = document.querySelector<HTMLElement>('[data-scroll-percent]');
-  const counterEl = document.querySelector<HTMLButtonElement>('[data-scroll-counter]');
-  const indicatorEl = document.querySelector<HTMLElement>('[data-section-indicator]');
-  const max = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  const scrollY = window.scrollY;
+  const viewport = window.innerHeight;
+  const progress = maxScroll > 0 ? Math.min(1, Math.max(0, scrollY / maxScroll)) : 0;
   const value = Math.round(progress * 100);
+
   if (percentEl) percentEl.textContent = String(value).padStart(2, '0');
-  if (counterEl) counterEl.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.65);
-  if (indicatorEl) indicatorEl.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.55);
+  if (counterEl) counterEl.classList.toggle('is-visible', scrollY > viewport * 0.65);
+  if (indicatorEl) indicatorEl.classList.toggle('is-visible', scrollY > viewport * 0.55);
 }
 
 export function initSectionEffects() {
+  percentEl = document.querySelector<HTMLElement>('[data-scroll-percent]');
+  counterEl = document.querySelector<HTMLButtonElement>('[data-scroll-counter]');
+  indicatorEl = document.querySelector<HTMLElement>('[data-section-indicator]');
+
   const sections = [...document.querySelectorAll<HTMLElement>('[data-section]')];
   const dots = [...document.querySelectorAll<HTMLAnchorElement>('[data-section-dot]')];
 
@@ -32,8 +56,9 @@ export function initSectionEffects() {
     dots.forEach((dot) => dot.classList.toggle('is-active', dot.dataset.sectionTarget === id));
   };
 
+  sectionObserver?.disconnect();
   if (sections.length) {
-    const observer = new IntersectionObserver(
+    sectionObserver = new IntersectionObserver(
       (entries) => {
         const visible = entries
           .filter((entry) => entry.isIntersecting)
@@ -42,7 +67,7 @@ export function initSectionEffects() {
       },
       { rootMargin: '-35% 0px -45% 0px', threshold: [0.05, 0.2, 0.5] }
     );
-    sections.forEach((section) => observer.observe(section));
+    sections.forEach((section) => sectionObserver?.observe(section));
   }
 
   dots.forEach((dot) => {
@@ -56,9 +81,18 @@ export function initSectionEffects() {
     });
   });
 
+  measureScrollRange();
+
   if (!scrollBound) {
     scrollBound = true;
+    window.addEventListener('resize', scheduleMeasure, { passive: true });
+    window.addEventListener('load', scheduleMeasure, { once: true });
   }
+
+  resizeObserver?.disconnect();
+  resizeObserver = new ResizeObserver(scheduleMeasure);
+  resizeObserver.observe(document.body);
+
   updateActiveSectionUI();
 }
 

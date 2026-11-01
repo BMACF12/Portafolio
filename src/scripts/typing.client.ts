@@ -15,12 +15,19 @@ const WORDS_EN = [
   'Passionate about code',
 ];
 
+let masterTl: ReturnType<typeof gsap.timeline> | null = null;
+let typingObserver: IntersectionObserver | null = null;
+
 export function initTypingEffect() {
   const el = document.querySelector<HTMLElement>('[data-typing-text]');
-  if (!el || el.dataset.typingBound) return;
-  el.dataset.typingBound = 'true';
+  if (!el) return;
 
-  const lang = (document.documentElement.lang === 'en' ? 'en' : 'es') as 'es' | 'en';
+  masterTl?.kill();
+  masterTl = null;
+  typingObserver?.disconnect();
+  typingObserver = null;
+
+  const lang = document.documentElement.lang.startsWith('en') ? 'en' : 'es';
   const words = lang === 'en' ? WORDS_EN : WORDS_ES;
 
   if (prefersReducedMotion()) {
@@ -28,9 +35,11 @@ export function initTypingEffect() {
     return;
   }
 
-  let masterTl = gsap.timeline({ repeat: -1 });
+  const timeline = gsap.timeline({ repeat: -1, paused: true });
+  masterTl = timeline;
+
   words.forEach((word) => {
-    let tl = gsap.timeline();
+    const tl = gsap.timeline();
     tl.to(el, {
       duration: 0.05,
       onComplete: () => {
@@ -55,6 +64,16 @@ export function initTypingEffect() {
         el.style.opacity = '1';
       },
     });
-    masterTl.add(tl);
+    timeline.add(tl);
   });
+
+  const trigger = el.closest<HTMLElement>('[data-section]') || el;
+  typingObserver = new IntersectionObserver(
+    (entries) => {
+      if (entries[0]?.isIntersecting) timeline.play();
+      else timeline.pause();
+    },
+    { threshold: 0 }
+  );
+  typingObserver.observe(trigger);
 }

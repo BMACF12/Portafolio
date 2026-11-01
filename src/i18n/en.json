@@ -166,11 +166,16 @@
       "messageRequired": "Message is required",
       "messageMin": "Message must be at least 10 characters"
     },
+    "socialLabel": "Find me on",
+    "whatsappMessage": "Hi Brian, I saw your portfolio and I'd like to talk to you.",
     "info": {
       "email": "Email",
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
       "location": "Location",
       "locationValue": "Ecuador · Remote available",
-      "availability": "Availability"
+      "availability": "Availability",
+      "availabilityValue": "Open to opportunities"
     }
   },
   "footer": {

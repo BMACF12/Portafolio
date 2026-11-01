@@ -8,90 +8,17 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
-
-const socialLinks = [
-  {
-    name: t.social.linkedin,
-    href: 'https://www.linkedin.com/in/brian-flores-308189322',
-    icon: 'linkedin',
-  },
-  {
-    name: t.social.github,
-    href: 'https://github.com/BMACF12',
-    icon: 'github',
-  },
-  {
-    name: t.social.email,
-    href: 'mailto:brianf13@outlook.es',
-    icon: 'email',
-  },
-];
 ---
 
 <footer class="footer">
   <div class="container">
-    <div class="footer-cta">
-      <span class="footer-label reveal">{t.contact.label}</span>
-      <h2 class="footer-title reveal">{t.contact.title}</h2>
-      <p class="footer-subtitle reveal">{t.contact.subtitle}</p>
-
-      <div class="footer-actions reveal-stagger">
-        <a
-          href="mailto:brianf13@outlook.es"
-          class="btn-primary magnetic"
-        >
-          <span>brianf13@outlook.es</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M13 5l7 7-7 7"></path>
-          </svg>
-        </a>
-        <a
-          href="tel:+593995466923"
-          class="btn-secondary magnetic"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"></path>
-          </svg>
-          <span>+593 99 546 6923</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="footer-divider"></div>
-
-    <div class="footer-bottom">
+    <div class="footer-top">
       <div class="footer-brand">
         <span class="footer-logo">BF</span>
-        <p class="footer-tagline">{t.footer.tagline}</p>
-      </div>
-
-      <div class="footer-social">
-        {socialLinks.map((link) => (
-          <a
-            href={link.href}
-            class="social-link magnetic"
-            target={link.href.startsWith('http') ? '_blank' : undefined}
-            rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            aria-label={link.name}
-          >
-            {link.icon === 'linkedin' && (
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
-              </svg>
-            )}
-            {link.icon === 'github' && (
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-5.37-5.37-12-12-12z"></path>
-              </svg>
-            )}
-            {link.icon === 'email' && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-            )}
-          </a>
-        ))}
+        <div class="footer-brand-text">
+          <span class="footer-name">Brian Flores</span>
+          <p class="footer-tagline">{t.footer.tagline}</p>
+        </div>
       </div>
     </div>
 
@@ -111,124 +38,15 @@ const socialLinks = [
 <style>
   .footer {
     position: relative;
-    padding: var(--space-12) 0 var(--space-6);
+    padding: var(--space-5) 0 var(--space-6);
     background: var(--color-bg-secondary);
     overflow: hidden;
   }
 
-  .footer::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 80%;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      var(--color-accent),
-      transparent
-    );
-    transform: translateX(-50%);
-  }
-
-  .footer-cta {
-    text-align: center;
-    margin-bottom: var(--space-10);
-  }
-
-  .footer-label {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    color: var(--color-accent);
-    margin-bottom: var(--space-4);
-    padding: 0.6rem 1.4rem;
-    border: 1px solid var(--color-accent);
-    border-radius: var(--radius-full);
-  }
-
-  .footer-title {
-    font-family: var(--font-display);
-    font-size: var(--text-h1);
-    font-weight: 700;
-    line-height: 1.05;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-3);
-    letter-spacing: -0.03em;
-  }
-
-  .footer-subtitle {
-    font-size: var(--text-body-lg);
-    color: var(--color-text-secondary);
-    max-width: 60ch;
-    margin: 0 auto var(--space-6);
-  }
-
-  .footer-actions {
+  .footer-top {
     display: flex;
-    gap: var(--space-3);
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    display: inline-flex;
     align-items: center;
-    gap: 0.8rem;
-    padding: 1.4rem 2.4rem;
-    border-radius: var(--radius-full);
-    font-size: 1.4rem;
-    font-weight: 600;
-    transition: all var(--transition-base);
-  }
-
-  .btn-primary {
-    background: var(--color-accent);
-    color: var(--color-text-inverse);
-    box-shadow: var(--shadow-glow);
-  }
-  .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-glow-lg);
-  }
-  .btn-primary svg {
-    width: 2rem;
-    height: 2rem;
-    transition: transform var(--transition-base);
-  }
-  .btn-primary:hover svg {
-    transform: translateX(4px);
-  }
-
-  .btn-secondary {
-    background: transparent;
-    color: var(--color-text-primary);
-    border: 1.5px solid var(--color-border);
-  }
-  .btn-secondary:hover {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-  }
-  .btn-secondary svg {
-    width: 1.8rem;
-    height: 1.8rem;
-  }
-
-  .footer-divider {
-    width: 100%;
-    height: 1px;
-    background: var(--color-border);
-    margin-bottom: var(--space-6);
-  }
-
-  .footer-bottom {
-    display: flex;
     justify-content: space-between;
-    align-items: center;
     flex-wrap: wrap;
     gap: var(--space-4);
     margin-bottom: var(--space-5);
@@ -254,40 +72,24 @@ const socialLinks = [
     font-size: 1.6rem;
   }
 
+  .footer-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .footer-name {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+  }
+
   .footer-tagline {
     font-size: 1.4rem;
     color: var(--color-text-muted);
     margin: 0;
-  }
-
-  .footer-social {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .social-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 4.4rem;
-    height: 4.4rem;
-    border-radius: var(--radius-full);
-    border: 1px solid var(--color-border);
-    background: var(--color-bg-tertiary);
-    color: var(--color-text-secondary);
-    transition: all var(--transition-base);
-  }
-
-  .social-link svg {
-    width: 1.8rem;
-    height: 1.8rem;
-  }
-
-  .social-link:hover {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
-    background: var(--color-bg-elevated);
-    transform: translateY(-3px);
   }
 
   .footer-meta {

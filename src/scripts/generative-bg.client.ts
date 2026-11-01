@@ -6,6 +6,7 @@
  */
 
 import { prefersReducedMotion, isTouchDevice } from '../utils/helpers';
+import { getPerformanceTier } from '../utils/performance';
 import { getCurrentTheme } from './theme.client';
 
 interface Particle {
@@ -16,13 +17,30 @@ interface Particle {
   r: number;
 }
 
-const PARTICLE_BASE_DESKTOP = 110;
-const PARTICLE_BASE_MOBILE = 45;
+interface QualityProfile {
+  desktop: number;
+  mobile: number;
+  dpr: number;
+  links: boolean;
+  fps: number;
+}
+
+const PROFILES: Record<'high' | 'medium' | 'low', QualityProfile> = {
+  high: { desktop: 110, mobile: 45, dpr: 2, links: true, fps: 60 },
+  medium: { desktop: 70, mobile: 30, dpr: 1.5, links: true, fps: 40 },
+  low: { desktop: 32, mobile: 18, dpr: 1, links: false, fps: 30 },
+};
+
 const LINK_DISTANCE = 140;
 const LINK_DISTANCE_MOBILE = 90;
 const CURSOR_RADIUS = 180;
 const CURSOR_FORCE = 0.35;
 const TRAIL_FADE = 0.092; // alpha kept per frame via destination-in (1 - 0.092 = 0.908 decay)
+
+let quality = PROFILES[getPerformanceTier()];
+let degraded = false;
+let slowFrames = 0;
+let lastFrame = 0;
 
 let canvas: HTMLCanvasElement | null = null;
 let ctx: CanvasRenderingContext2D | null = null;
@@ -81,7 +99,7 @@ function spawn(): Particle {
 
 function resize() {
   if (!canvas || !ctx) return;
-  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  dpr = Math.min(window.devicePixelRatio || 1, quality.dpr);
   width = window.innerWidth;
   height = window.innerHeight;
   canvas.width = width * dpr;
@@ -92,7 +110,7 @@ function resize() {
 
   isMobile = window.matchMedia('(max-width: 700px)').matches;
   const area = width * height;
-  const target = isMobile ? PARTICLE_BASE_MOBILE : PARTICLE_BASE_DESKTOP;
+  const target = isMobile ? quality.mobile : quality.desktop;
   const density = area / (1440 * 900);
   const count = Math.round(target * Math.max(0.5, Math.min(1.4, density)));
   linkDistance = isMobile ? LINK_DISTANCE_MOBILE : LINK_DISTANCE;
@@ -127,6 +145,8 @@ function onWheel() {
   lastScrollTime = now;
 }
 
+let lenisAttempts = 0;
+
 function attachLenis() {
   const lenis = window.__lenis;
   if (lenis && typeof lenis.on === 'function') {
@@ -134,14 +154,31 @@ function attachLenis() {
       scrollVel = velocity * 1.2;
       lastScrollY = scroll;
     });
-  } else {
+  } else if (lenisAttempts++ < 15) {
     setTimeout(attachLenis, 200);
   }
 }
 
-function step() {
+function step(time: number) {
   if (!ctx || !canvas) return;
   rafId = requestAnimationFrame(step);
+
+  const delta = lastFrame ? time - lastFrame : 16;
+  if (lastFrame && delta < 1000 / quality.fps - 1) return;
+  lastFrame = time;
+
+  if (!degraded && quality !== PROFILES.low) {
+    if (delta > 34) slowFrames++;
+    else slowFrames = Math.max(0, slowFrames - 2);
+
+    if (slowFrames > 90) {
+      degraded = true;
+      slowFrames = 0;
+      quality = PROFILES.low;
+      lastFrame = 0;
+      resize();
+    }
+  }
 
   // 1) Fade existing pixels toward transparent (destination-in keeps alpha).
   ctx.globalCompositeOperation = 'destination-in';
@@ -157,7 +194,7 @@ function step() {
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i];
     const angle =
-      Math.sin(p.y * 0.0025 + performance.now() * 0.0001) * 1.6 +
+      Math.sin(p.y * 0.0025 + time * 0.0001) * 1.6 +
       Math.cos(p.x * 0.003) * 1.6 +
       flowSign * flow * 0.4;
     p.vx += Math.cos(angle) * 0.018;
@@ -187,22 +224,24 @@ function step() {
     if (p.y > height + 20) p.y = -20;
   }
 
-  const linkAlpha = alphaForTheme(0.35);
-  for (let i = 0; i < particles.length; i++) {
-    const a = particles[i];
-    for (let j = i + 1; j < particles.length; j++) {
-      const b = particles[j];
-      const dx = a.x - b.x;
-      const dy = a.y - b.y;
-      const d = Math.sqrt(dx * dx + dy * dy);
-      if (d < linkDistance) {
-        const alpha = (1 - d / linkDistance) * linkAlpha;
-        ctx.strokeStyle = `rgba(${accent.r}, ${accent.g}, ${accent.b}, ${alpha})`;
-        ctx.lineWidth = 0.6;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
+  if (quality.links) {
+    const linkAlpha = alphaForTheme(0.35);
+    for (let i = 0; i < particles.length; i++) {
+      const a = particles[i];
+      for (let j = i + 1; j < particles.length; j++) {
+        const b = particles[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < linkDistance) {
+          const alpha = (1 - d / linkDistance) * linkAlpha;
+          ctx.strokeStyle = `rgba(${accent.r}, ${accent.g}, ${accent.b}, ${alpha})`;
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
       }
     }
   }
@@ -222,6 +261,8 @@ function step() {
 function start() {
   if (!ctx || !canvas) return;
   refreshThemeColors();
+  lastFrame = 0;
+  slowFrames = 0;
   resize();
   if (!rafId) rafId = requestAnimationFrame(step);
 }
@@ -237,6 +278,7 @@ function onVisibilityChange() {
   if (document.hidden) {
     pause();
   } else if (!rafId && canvas && ctx) {
+    lastFrame = 0;
     rafId = requestAnimationFrame(step);
   }
 }
@@ -271,6 +313,10 @@ export function initGenerativeBackground() {
   canvas = newCanvas;
   ctx = canvas.getContext('2d');
   if (!ctx) return;
+
+  quality = PROFILES[getPerformanceTier()];
+  degraded = false;
+  lenisAttempts = 0;
 
   refreshThemeColors();
   resize();
@@ -308,6 +354,7 @@ let themeObserver: MutationObserver | null = null;
 export function destroyGenerativeBackground() {
   if (rafId) cancelAnimationFrame(rafId);
   rafId = 0;
+  lastFrame = 0;
   canvas = null;
   ctx = null;
   particles = [];
