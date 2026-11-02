@@ -72,7 +72,7 @@ const baseUrl = locale === 'en' ? '/en' : '';
             width={500}
             height={500}
             widths={[320, 500, 800]}
-            sizes="(max-width: 768px) 70vw, 480px"
+            sizes="(max-width: 768px) 78vw, 480px"
             format="webp"
             quality={85}
             loading="eager"
@@ -108,9 +108,10 @@ const baseUrl = locale === 'en' ? '/en' : '';
   .hero {
     position: relative;
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
-    padding-top: calc(var(--header-height) + 2rem);
+    padding-top: calc(var(--header-height) + 2rem + env(safe-area-inset-top, 0px));
     padding-bottom: var(--space-8);
     overflow: hidden;
   }
@@ -216,6 +217,12 @@ const baseUrl = locale === 'en' ? '/en' : '';
     display: inline-block;
   }
 
+  @media (min-width: 1024px) and (max-width: 1199px) {
+    .hero-name {
+      font-size: clamp(6.2rem, 6.2vw, 7.4rem);
+    }
+  }
+
   .hero-role {
     display: flex;
     align-items: center;
@@ -316,7 +323,7 @@ const baseUrl = locale === 'en' ? '/en' : '';
 
   .hero-image-wrap {
     position: relative;
-    width: clamp(280px, 40vw, 480px);
+    width: clamp(220px, 78vw, 480px);
     aspect-ratio: 1;
   }
 
@@ -404,6 +411,12 @@ const baseUrl = locale === 'en' ? '/en' : '';
     animation: float 6s ease-in-out infinite 4s;
   }
 
+  @media (max-width: 1300px) and (min-width: 481px) {
+    .hero-badge-2 {
+      right: -8%;
+    }
+  }
+
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-15px); }
@@ -443,5 +456,49 @@ const baseUrl = locale === 'en' ? '/en' : '';
     background: var(--color-accent);
     margin: 0.6rem auto;
     animation: scroll-indicator 1.6s ease-in-out infinite;
+  }
+
+  @media (max-width: 768px), (pointer: coarse) {
+    .hero-image-badge {
+      background: color-mix(in srgb, var(--color-bg-secondary) 94%, transparent);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-glow {
+      filter: blur(80px);
+      opacity: 0.3;
+    }
+  }
+
+  @media (max-width: 768px), (max-height: 720px) {
+    .hero-scroll-indicator {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-image-badge {
+      padding: 0.6rem 1rem;
+      font-size: 1.1rem;
+    }
+
+    .hero-badge-1 {
+      top: 2%;
+      left: 0;
+    }
+
+    .hero-badge-2 {
+      top: auto;
+      right: 0;
+      bottom: 28%;
+    }
+
+    .hero-badge-3 {
+      bottom: 4%;
+      left: 0;
+    }
   }
 </style>

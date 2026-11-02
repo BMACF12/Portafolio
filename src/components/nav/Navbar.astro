@@ -65,7 +65,7 @@ const navLinks = [
     <span class="menu-line"></span>
   </button>
 
-  <div id="mobile-menu" class="nav-mobile" aria-hidden="true">
+  <div id="mobile-menu" class="nav-mobile" aria-hidden="true" inert>
     <nav aria-label="Mobile navigation">
       <ul role="list">
         {navLinks.map((link) => (
@@ -93,6 +93,7 @@ const navLinks = [
 
 <style>
   .navbar {
+    --nav-pad-y: 2rem;
     position: fixed;
     top: 0;
     left: 0;
@@ -101,7 +102,11 @@ const navLinks = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 2rem var(--gutter);
+    padding:
+      calc(var(--nav-pad-y) + env(safe-area-inset-top, 0px))
+      max(var(--gutter), env(safe-area-inset-right, 0px))
+      var(--nav-pad-y)
+      max(var(--gutter), env(safe-area-inset-left, 0px));
     border-bottom: 1px solid transparent;
     transition:
       padding var(--transition-base),
@@ -135,8 +140,8 @@ const navLinks = [
   }
 
   .navbar.scrolled {
+    --nav-pad-y: 1.4rem;
     border-bottom-color: var(--color-border);
-    padding: 1.4rem var(--gutter);
   }
 
   .logo {
@@ -279,15 +284,20 @@ const navLinks = [
 
   .nav-mobile {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
+    height: 100vh;
+    height: 100dvh;
     background: var(--color-bg-primary);
     z-index: 99;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding:
+      calc(var(--header-height) + env(safe-area-inset-top, 0px))
+      0
+      env(safe-area-inset-bottom, 0px);
     transform: translateX(100%);
     transition: transform 0.6s var(--ease-out-expo);
   }
@@ -298,6 +308,7 @@ const navLinks = [
 
   .nav-mobile nav {
     width: 100%;
+    margin-block: auto;
     padding: var(--gutter);
   }
 
@@ -333,6 +344,17 @@ const navLinks = [
     display: flex;
     gap: 1.5rem;
     justify-content: center;
+  }
+
+  @media (max-width: 1023px) and (max-height: 700px) {
+    .nav-mobile ul {
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .nav-link-mobile {
+      font-size: clamp(2rem, 7vw, 3rem);
+    }
   }
 
   @media (min-width: 1024px) {

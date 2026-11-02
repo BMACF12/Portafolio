@@ -144,6 +144,7 @@
 html {
   font-size: 62.5%;
   scroll-behavior: auto;
+  scroll-padding-top: calc(var(--header-height) + env(safe-area-inset-top, 0px));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -236,6 +237,7 @@ body > footer {
 
 body.no-scroll {
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 img, video, svg {

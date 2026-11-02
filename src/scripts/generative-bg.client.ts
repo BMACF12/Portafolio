@@ -5,7 +5,7 @@
  * darkens the page when mix-blend-mode: multiply is active in light theme.
  */
 
-import { prefersReducedMotion, isTouchDevice } from '../utils/helpers';
+import { prefersReducedMotion } from '../utils/helpers';
 import { getPerformanceTier } from '../utils/performance';
 import { getCurrentTheme } from './theme.client';
 
@@ -292,7 +292,7 @@ function onThemeChange() {
 export function initGenerativeBackground() {
   const newCanvas = document.querySelector<HTMLCanvasElement>('[data-generative-bg]');
   if (!newCanvas) return;
-  if (prefersReducedMotion() || isTouchDevice()) {
+  if (prefersReducedMotion()) {
     newCanvas.style.display = 'none';
     return;
   }

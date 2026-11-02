@@ -26,6 +26,7 @@ let navbarEl: HTMLElement | null = null;
 let scrollRaf = 0;
 let pageToken = 0;
 let deferredModules: Promise<DeferredModules> | null = null;
+let mobileOpen = false;
 
 function onScroll() {
   if (scrollRaf) return;
@@ -34,6 +35,19 @@ function onScroll() {
     navbarEl?.classList.toggle('scrolled', window.scrollY > 120);
     updateActiveSectionUI();
   });
+}
+
+function setMobileOpen(open: boolean) {
+  mobileOpen = open;
+  const menuToggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const mobileMenu = document.querySelector<HTMLElement>('.nav-mobile');
+  if (!menuToggle || !mobileMenu) return;
+  menuToggle.classList.toggle('active', open);
+  mobileMenu.classList.toggle('open', open);
+  menuToggle.setAttribute('aria-expanded', String(open));
+  mobileMenu.setAttribute('aria-hidden', String(!open));
+  mobileMenu.toggleAttribute('inert', !open);
+  document.body.classList.toggle('no-scroll', open);
 }
 
 function loadDeferredModules(): Promise<DeferredModules> {
@@ -96,7 +110,7 @@ function initPage() {
   const token = ++pageToken;
 
   navbarEl = document.querySelector<HTMLElement>('[data-navbar]');
-  document.body.classList.remove('no-scroll');
+  setMobileOpen(false);
 
   initTheme();
   initSectionEffects();
@@ -121,20 +135,6 @@ document.addEventListener('astro:page-load', () => {
 // (component-bundled scripts stop re-executing after navigation).
 if (!uiBound) {
   uiBound = true;
-
-  let mobileOpen = false;
-
-  const setMobileOpen = (open: boolean) => {
-    mobileOpen = open;
-    const menuToggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
-    const mobileMenu = document.querySelector<HTMLElement>('.nav-mobile');
-    if (!menuToggle || !mobileMenu) return;
-    menuToggle.classList.toggle('active', open);
-    mobileMenu.classList.toggle('open', open);
-    menuToggle.setAttribute('aria-expanded', String(open));
-    mobileMenu.setAttribute('aria-hidden', String(!open));
-    document.body.classList.toggle('no-scroll', open);
-  };
 
   document.addEventListener('click', (event) => {
     const target = event.target as Element | null;

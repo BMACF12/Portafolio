@@ -45,8 +45,10 @@ let activeIndex = -1;
 let sectionVisible = true;
 let visibilityObserver: IntersectionObserver | null = null;
 let visibilityBound = false;
+let mobileBound = false;
 let lastFrame = 0;
 const frameInterval = frameIntervalForTier();
+const mobileQuery = typeof window !== 'undefined' ? window.matchMedia('(max-width: 700px)') : null;
 
 function stopTicker() {
   if (tickerId !== null) {
@@ -61,7 +63,8 @@ function startTicker() {
     !revealed ||
     !sectionVisible ||
     document.hidden ||
-    prefersReducedMotion()
+    prefersReducedMotion() ||
+    mobileQuery?.matches
   ) {
     return;
   }
@@ -210,7 +213,7 @@ function bindNodeInteractions(node: Node) {
 
   // Pointer-based drag
   node.el.addEventListener('pointerdown', (event: PointerEvent) => {
-    if (prefersReducedMotion()) return;
+    if (prefersReducedMotion() || mobileQuery?.matches) return;
     if (event.button !== 0) return;
     event.preventDefault();
     node.pointerId = event.pointerId;
@@ -286,13 +289,11 @@ function reveal() {
   if (revealed) return;
   revealed = true;
 
-  if (prefersReducedMotion()) {
-    nodes.forEach((node) => {
-      node.el.style.opacity = '1';
-    });
+  if (prefersReducedMotion() || mobileQuery?.matches) {
+    gsap.set(nodes.map((node) => node.el), { opacity: 1, scale: 1 });
     edges.forEach((edge) => edge.setAttribute('opacity', '0.55'));
     root?.classList.add('is-visible');
-    nodes.forEach(bindNodeInteractions);
+    if (!mobileQuery?.matches) nodes.forEach(bindNodeInteractions);
     return;
   }
 
@@ -405,6 +406,18 @@ export function initConstellation() {
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) stopTicker();
       else startTicker();
+    });
+  }
+
+  if (!mobileBound && mobileQuery) {
+    mobileBound = true;
+    mobileQuery.addEventListener('change', () => {
+      if (mobileQuery.matches) {
+        stopTicker();
+      } else if (revealed) {
+        nodes.forEach(bindNodeInteractions);
+        startTicker();
+      }
     });
   }
 

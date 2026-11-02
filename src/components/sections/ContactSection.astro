@@ -317,6 +317,7 @@ const socialLinks = [
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.03em;
+    overflow-wrap: anywhere;
     word-break: break-word;
   }
 
@@ -404,6 +405,7 @@ const socialLinks = [
     font-size: 1.5rem;
     color: var(--color-text-primary);
     font-weight: 500;
+    overflow-wrap: anywhere;
   }
 
   .status-pill {
@@ -476,5 +478,38 @@ const socialLinks = [
     border-color: var(--color-accent);
     background: var(--color-bg-elevated);
     transform: translateY(-3px);
+  }
+
+  @media (max-width: 768px) {
+    .contact-glow {
+      filter: blur(80px);
+      opacity: 0.18;
+    }
+
+    .contact-primary-icon {
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .contact-primary {
+      min-height: 0;
+      padding: var(--space-4);
+      gap: var(--space-4);
+    }
+
+    .contact-primary-bottom {
+      align-items: center;
+    }
+
+    .contact-primary-value {
+      font-size: clamp(1.8rem, 6.5vw, 2.4rem);
+    }
+
+    .contact-primary-arrow {
+      width: 4.4rem;
+      height: 4.4rem;
+    }
   }
 </style>

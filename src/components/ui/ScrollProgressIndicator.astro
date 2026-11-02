@@ -7,5 +7,5 @@
   .scroll-counter.is-visible { opacity: 1; transform: translateY(0); }
   .scroll-counter small { color: var(--color-text-muted); font-size: .9rem; }
   .scroll-counter:hover { color: var(--color-accent-hover); }
-  @media (max-width: 700px) { .scroll-counter { top: 8rem; right: 2rem; } }
+  @media (max-width: 700px) { .scroll-counter { top: calc(8rem + env(safe-area-inset-top, 0px)); right: max(2rem, env(safe-area-inset-right, 0px)); } }
 </style>

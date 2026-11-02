@@ -110,6 +110,12 @@ href={`${baseUrl}/projects/${project.id.split('/')[1]}`}
 
   <div class="projects-fallback">
     <div class="container">
+      <div class="projects-fallback-header">
+        <SectionLabel label={t.projects.label} number="04" />
+        <h2 class="projects-title font-display">{t.projects.title}</h2>
+        <p class="projects-subtitle">{t.projects.subtitle}</p>
+      </div>
+
       <div class="projects-fallback-grid">
         {projects.map((project, idx) => (
           <article class="project-card" data-spotlight>
@@ -148,22 +154,25 @@ href={`${baseUrl}/projects/${project.id.split('/')[1]}`}
     position: relative;
   }
 
-  /* Horizontal scroll section (desktop) */
+  /* Horizontal scroll section (desktop, only after GSAP initialises). */
   .projects-pin {
     display: none;
     min-height: 100vh;
+    min-height: 100svh;
     overflow: hidden;
   }
 
   .projects-track {
     display: flex;
     height: 100vh;
+    height: 100svh;
     width: fit-content;
   }
 
   .projects-intro {
     width: 100vw;
     height: 100vh;
+    height: 100svh;
     display: flex;
     align-items: center;
     padding: var(--gutter);
@@ -210,6 +219,7 @@ href={`${baseUrl}/projects/${project.id.split('/')[1]}`}
   .project-slide {
     width: 100vw;
     height: 100vh;
+    height: 100svh;
     display: flex;
     align-items: center;
     padding: var(--gutter);
@@ -459,6 +469,10 @@ href={`${baseUrl}/projects/${project.id.split('/')[1]}`}
     display: block;
   }
 
+  .projects-fallback-header {
+    margin-bottom: var(--space-6);
+  }
+
   .projects-fallback-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -528,12 +542,13 @@ href={`${baseUrl}/projects/${project.id.split('/')[1]}`}
     transform: translateX(4px);
   }
 
-  /* Show horizontal scroll on desktop only */
+  /* Enable the pinned slider only when GSAP is actually driving it. */
   @media (min-width: 1024px) {
-    .projects-pin {
+    :global(html.has-horizontal-projects) .projects-pin {
       display: block;
     }
-    .projects-fallback {
+
+    :global(html.has-horizontal-projects) .projects-fallback {
       display: none;
     }
   }

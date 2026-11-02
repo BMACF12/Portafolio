@@ -7,6 +7,21 @@ import type Lenis from 'lenis';
 gsap.registerPlugin(ScrollTrigger);
 
 let lenisInstance: Lenis | null = null;
+let motionMedia: ReturnType<typeof gsap.matchMedia> | null = null;
+
+const DESKTOP_MOTION = '(min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference)';
+const MOTION_CLASSES = ['has-sticky-intro', 'has-horizontal-projects'];
+
+function clearMotionClasses() {
+  MOTION_CLASSES.forEach((className) => document.documentElement.classList.remove(className));
+}
+
+function resetProjectsIntro() {
+  const intro = document.querySelector<HTMLElement>('[data-projects-intro]');
+  if (!intro) return;
+  intro.style.removeProperty('opacity');
+  intro.style.removeProperty('transform');
+}
 
 /**
  * Re-runnable GSAP init. The caller (main.client.ts) has already killed stale
@@ -19,6 +34,10 @@ let lenisInstance: Lenis | null = null;
  */
 export function initGsapAnimations() {
   if (prefersReducedMotion()) {
+    motionMedia?.revert();
+    motionMedia = null;
+    clearMotionClasses();
+    resetProjectsIntro();
     document.documentElement.classList.remove('lenis');
     document.querySelectorAll<HTMLElement>('.reveal, .reveal-stagger, .mask-reveal').forEach((el) => {
       el.classList.add('is-visible');
@@ -39,12 +58,25 @@ export function initGsapAnimations() {
   }
 
   initRevealOnScroll();
-  initParallax();
-  initStickySections();
-  initProjectsSlider();
   initSplitText();
   initMagneticButtons();
   initScrollProgress();
+
+  motionMedia?.revert();
+  clearMotionClasses();
+  resetProjectsIntro();
+  motionMedia = gsap.matchMedia();
+  motionMedia.add(DESKTOP_MOTION, () => {
+    document.documentElement.classList.add('has-sticky-intro', 'has-horizontal-projects');
+    initParallax();
+    initStickySections();
+    initProjectsSlider();
+
+    return () => {
+      clearMotionClasses();
+      resetProjectsIntro();
+    };
+  });
 
   ScrollTrigger.refresh();
 
@@ -112,7 +144,7 @@ function initStickySections() {
 
 function initProjectsSlider() {
   const slider = document.querySelector<HTMLElement>('[data-projects-slider]');
-  if (!slider || isTouchDevice()) return;
+  if (!slider) return;
 
   const track = slider.querySelector<HTMLElement>('[data-projects-track]');
   const intro = slider.querySelector<HTMLElement>('[data-projects-intro]');
@@ -152,12 +184,21 @@ function initSplitText() {
     el.dataset.splitDone = 'true';
     const text = el.textContent || '';
     el.innerHTML = text
-      .split('')
-      .map((char) =>
-        char === ' '
-          ? '<span class="char" style="display:inline-block;width:0.3em;">&nbsp;</span>'
-          : `<span class="char" style="display:inline-block;will-change:transform;">${char}</span>`
-      )
+      .split(/(\s+)/)
+      .filter(Boolean)
+      .map((part) => {
+        if (/^\s+$/.test(part)) {
+          return '<span class="char" style="display:inline-block;width:0.3em;">&nbsp;</span>';
+        }
+        const chars = part
+          .split('')
+          .map(
+            (char) =>
+              `<span class="char" style="display:inline-block;will-change:transform;">${char}</span>`
+          )
+          .join('');
+        return `<span style="display:inline-block;white-space:nowrap;">${chars}</span>`;
+      })
       .join('');
 
     const chars = el.querySelectorAll<HTMLElement>('.char');

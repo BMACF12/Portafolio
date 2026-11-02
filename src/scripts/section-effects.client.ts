@@ -48,6 +48,13 @@ export function initSectionEffects() {
   counterEl = document.querySelector<HTMLButtonElement>('[data-scroll-counter]');
   indicatorEl = document.querySelector<HTMLElement>('[data-section-indicator]');
 
+  if (counterEl && !counterEl.dataset.bound) {
+    counterEl.dataset.bound = 'true';
+    counterEl.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    });
+  }
+
   const sections = [...document.querySelectorAll<HTMLElement>('[data-section]')];
   const dots = [...document.querySelectorAll<HTMLAnchorElement>('[data-section-dot]')];
 
