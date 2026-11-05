@@ -38,7 +38,6 @@ export default defineConfig({
     '/cv': '/cv/Brian_Flores_CV.pdf',
     '/services': '/en#services',
     '/skills': '/en#skills',
-    '/projects': '/en#projects',
     '/experience': '/en#experience',
     '/contact': '/en#contact',
   },

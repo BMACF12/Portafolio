@@ -24,13 +24,13 @@ const t = useTranslations(locale);
           <span class="timeline-line"></span>
         </div>
         <div class="timeline-content">
-          <span class="timeline-date">2023 — {locale === 'es' ? 'Actualidad' : 'Present'}</span>
-          <h3 class="timeline-title font-display">{locale === 'es' ? 'Estudiante de Ingeniería en Software' : 'Software Engineering Student'}</h3>
-          <p class="timeline-place">Universidad de las Fuerzas Armadas ESPE · Ecuador</p>
+          <span class="timeline-date">{locale === 'es' ? '2026 — 2027 · 8 meses' : '2026 — 2027 · 8 months'}</span>
+          <h3 class="timeline-title font-display">{locale === 'es' ? 'Desarrollador y Soporte de CRM' : 'CRM Developer & Support'}</h3>
+          <p class="timeline-place">Eclipttica · Marketing Digital</p>
           <p class="timeline-desc">
             {locale === 'es'
-              ? 'Formación en desarrollo de software, arquitecturas, bases de datos y metodologías ágiles. Trabajo en proyectos académicos y personales con Angular, Flutter y TypeScript.'
-              : 'Education in software development, architectures, databases and agile methodologies. Working on academic and personal projects with Angular, Flutter and TypeScript.'}
+              ? 'Desarrollo y soporte del CRM propio de la empresa, construido en TypeScript e integrado con las APIs de Meta y WhatsApp. Implementé funcionalidades de IA con RAG para el equipo comercial y atendí incidencias en producción.'
+              : "Development and support of the company's in-house CRM, built in TypeScript and integrated with Meta and WhatsApp APIs. I implemented AI features with RAG for the sales team and handled production incidents."}
           </p>
         </div>
       </li>
@@ -41,13 +41,47 @@ const t = useTranslations(locale);
           <span class="timeline-line"></span>
         </div>
         <div class="timeline-content">
-          <span class="timeline-date">2024</span>
-          <h3 class="timeline-title font-display">{locale === 'es' ? 'Proyectos Freelance' : 'Freelance Projects'}</h3>
-          <p class="timeline-place">{locale === 'es' ? 'Varios clientes · Remoto' : 'Various clients · Remote'}</p>
+          <span class="timeline-date">2026</span>
+          <h3 class="timeline-title font-display">{locale === 'es' ? 'Proyecto de Tesis · Auditor IA' : 'Thesis Project · Auditor IA'}</h3>
+          <p class="timeline-place">Universidad de las Fuerzas Armadas ESPE</p>
           <p class="timeline-desc">
             {locale === 'es'
-              ? 'Desarrollo de aplicaciones web y móviles para clientes reales, desde landing pages hasta aplicaciones complejas con backend.'
-              : 'Web and mobile app development for real clients, from landing pages to complex applications with backend.'}
+              ? 'Diseñé y desarrollé un sistema RAG que audita evidencias de acreditación universitaria: extracción determinista de PDFs, recuperación normativa en ChromaDB y dictamen con LLM, sobre una cola asíncrona con Celery y Redis.'
+              : 'I designed and built a RAG system that audits university accreditation evidence: deterministic PDF extraction, regulation retrieval in ChromaDB and LLM assessment, running on an async Celery + Redis queue.'}
+          </p>
+        </div>
+      </li>
+
+      <li class="timeline-item reveal">
+        <div class="timeline-marker">
+          <span class="timeline-dot"></span>
+          <span class="timeline-line"></span>
+        </div>
+        <div class="timeline-content">
+          <span class="timeline-date">2025 — 2026</span>
+          <h3 class="timeline-title font-display">{locale === 'es' ? 'Desarrollador Front-End & Diseñador' : 'Front-End Developer & Designer'}</h3>
+          <p class="timeline-place">AYRE Centro de Desarrollo Integral</p>
+          <p class="timeline-desc">
+            {locale === 'es'
+              ? 'Desarrollo frontend de aplicaciones web responsivas con JavaScript y TypeScript, complementado con el diseño de la identidad visual del negocio.'
+              : 'Frontend development of responsive web applications with JavaScript and TypeScript, complemented by the design of the business visual identity.'}
+          </p>
+        </div>
+      </li>
+
+      <li class="timeline-item reveal">
+        <div class="timeline-marker">
+          <span class="timeline-dot"></span>
+          <span class="timeline-line"></span>
+        </div>
+        <div class="timeline-content">
+          <span class="timeline-date">2024 — 2025</span>
+          <h3 class="timeline-title font-display">{locale === 'es' ? 'Prácticas Pre-Profesionales en Desarrollo de Software' : 'Software Development Internship'}</h3>
+          <p class="timeline-place">DIRMOV</p>
+          <p class="timeline-desc">
+            {locale === 'es'
+              ? 'Participación en el desarrollo e implementación de proyectos de software y en la elaboración de documentación técnica, cuidando el ciclo de vida del desarrollo y la escalabilidad de los sistemas.'
+              : 'Involvement in the development and implementation of software projects and in the creation of technical documentation, supporting the development lifecycle and system scalability.'}
           </p>
         </div>
       </li>
@@ -65,6 +99,23 @@ const t = useTranslations(locale);
             {locale === 'es'
               ? 'Descubrí la programación y comencé a construir proyectos propios: calculadoras, sitios web estáticos, pequeños bots. Ese fue el inicio del camino.'
               : 'I discovered programming and started building personal projects: calculators, static websites, small bots. That was the beginning of the journey.'}
+          </p>
+        </div>
+      </li>
+
+      <li class="timeline-item reveal">
+        <div class="timeline-marker">
+          <span class="timeline-dot"></span>
+          <span class="timeline-line"></span>
+        </div>
+        <div class="timeline-content">
+          <span class="timeline-date">2021 — {locale === 'es' ? 'Actualidad' : 'Present'}</span>
+          <h3 class="timeline-title font-display">{locale === 'es' ? 'Estudiante de Ingeniería en Software' : 'Software Engineering Student'}</h3>
+          <p class="timeline-place">Universidad de las Fuerzas Armadas ESPE · Ecuador</p>
+          <p class="timeline-desc">
+            {locale === 'es'
+              ? 'Formación en arquitecturas de software, bases de datos y automatización de procesos, con enfoque en ecosistemas de IA, arquitecturas RAG y consumo de APIs. Proyectos académicos y personales con Angular, Flutter y TypeScript.'
+              : 'Education in software architectures, databases and process automation, focused on AI ecosystems, RAG architectures and API integration. Academic and personal projects with Angular, Flutter and TypeScript.'}
           </p>
         </div>
       </li>

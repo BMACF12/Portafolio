@@ -1,9 +1,9 @@
 {
   "meta": {
-    "title": "Brian Flores | Desarrollador Full-Stack",
-    "description": "Desarrollador de Software especializado en Angular, TypeScript y Flutter. Construyo experiencias digitales modernas, rápidas y accesibles.",
-    "ogDescription": "Portafolio de Brian Flores — Desarrollador Full-Stack en Ecuador, especializado en Angular y Flutter.",
-    "keywords": ["desarrollador", "full-stack", "angular", "typescript", "flutter", "ecuador", "portafolio"],
+    "title": "Brian Flores | Desarrollador Full-Stack & IA",
+    "description": "Desarrollador de Software especializado en Angular, TypeScript y Flutter, con experiencia en automatización, APIs de Meta y asistentes con IA y RAG.",
+    "ogDescription": "Portafolio de Brian Flores — Desarrollador Full-Stack en Ecuador, especializado en Angular, Flutter e integraciones con IA.",
+    "keywords": ["desarrollador", "full-stack", "angular", "typescript", "flutter", "rag", "inteligencia artificial", "meta developer", "automatización", "ecuador", "portafolio"],
     "author": "Brian Flores",
     "locale": "es-ES"
   },
@@ -42,7 +42,7 @@
     "titleAccent": "experiencias digitales",
     "paragraphs": [
       "Soy Ingeniero en Software en formación en la Universidad de las Fuerzas Armadas ESPE, con sede en Ecuador. Combino una base académica sólida con experiencia práctica construyendo aplicaciones reales.",
-      "Mi enfoque está en el frontend moderno: arquitecturas escalables en Angular, interfaces accesibles y experiencias móviles fluidas con Flutter. Cada proyecto es una oportunidad para aprender algo nuevo.",
+      "Mi enfoque combina el frontend moderno —arquitecturas escalables en Angular, interfaces accesibles y apps con Flutter— con automatización e integración de sistemas: CRMs, APIs de Meta y asistentes con IA y RAG. Cada proyecto es una oportunidad para aprender algo nuevo.",
       "Cuando no escribo código, me encontrarás leyendo sobre arquitectura de software, contribuyendo a proyectos open source o experimentando con nuevas tecnologías."
     ]
   },
@@ -60,7 +60,7 @@
       },
       {
         "title": "APIs y Backend",
-        "description": "Integración con servicios RESTful, autenticación JWT y arquitecturas serverless modernas."
+        "description": "Integración con APIs RESTful, webhooks (Meta, WhatsApp), autenticación JWT y arquitecturas serverless."
       },
       {
         "title": "UI/UX Engineering",
@@ -71,8 +71,8 @@
         "description": "Sitios web rápidos como un rayo: técnicas de performance, SEO técnico y Core Web Vitals."
       },
       {
-        "title": "Consultoría Técnica",
-        "description": "Code review, arquitectura de proyectos y mentoría para equipos junior."
+        "title": "Automatización e IA",
+        "description": "Flujos automáticos con n8n, integraciones por API y asistentes con RAG que responden con información real del negocio."
       }
     ]
   },
@@ -84,11 +84,9 @@
         "name": "Frontend",
         "skills": [
           { "name": "Angular", "level": 90 },
-          { "name": "TypeScript", "level": 88 },
+          { "name": "TypeScript", "level": 90 },
           { "name": "JavaScript", "level": 92 },
-          { "name": "HTML & CSS", "level": 95 },
-          { "name": "Tailwind CSS", "level": 90 },
-          { "name": "RxJS", "level": 80 }
+          { "name": "Tailwind CSS", "level": 90 }
         ]
       },
       {
@@ -97,20 +95,25 @@
           { "name": "Flutter", "level": 85 },
           { "name": "Dart", "level": 82 },
           { "name": "Firebase", "level": 78 },
-          { "name": "REST APIs", "level": 88 },
-          { "name": "Push Notifications", "level": 75 },
-          { "name": "State Management", "level": 80 }
+          { "name": "REST APIs", "level": 88 }
         ]
       },
       {
-        "name": "Tools & More",
+        "name": "IA & Automatización",
         "skills": [
+          { "name": "RAG", "level": 85 },
+          { "name": "IA aplicada", "level": 85 },
+          { "name": "Python", "level": 80 },
+          { "name": "n8n", "level": 82 }
+        ]
+      },
+      {
+        "name": "Integraciones & Tools",
+        "skills": [
+          { "name": "Meta Developer", "level": 82 },
+          { "name": "WhatsApp Business API", "level": 85 },
           { "name": "Git & GitHub", "level": 90 },
-          { "name": "Scrum / Kanban", "level": 85 },
-          { "name": "Figma", "level": 75 },
-          { "name": "Vite / Webpack", "level": 80 },
-          { "name": "Vercel / Netlify", "level": 85 },
-          { "name": "Problem Solving", "level": 92 }
+          { "name": "Vercel", "level": 85 }
         ]
       }
     ]
